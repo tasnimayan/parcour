@@ -24,8 +24,8 @@ import { User, UserRole } from "@/lib/auth";
 
 // Navigation item types and definitions
 const adminNavItems = [
-  { id: "overview", label: "System Overview", icon: Home },
-  { id: "users", label: "User Management", icon: Users },
+  { id: "overview", label: "Overview", icon: Home },
+  { id: "users", label: "User Mangement", icon: Users },
   { id: "assignments", label: "Parcel Assignment", icon: Package },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "reports", label: "Reports", icon: FileText },

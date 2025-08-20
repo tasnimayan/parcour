@@ -25,7 +25,7 @@ export function TopNavigation() {
     { id: "dashboard", label: "Dashboard", icon: Home },
     { id: "book", label: "Book Parcel", icon: Plus },
     { id: "track", label: "Track Parcel", icon: MapPin },
-    { id: "history", label: "My Parcels", icon: History },
+    { id: "history", label: "Parcel History", icon: History },
   ];
 
   return (
