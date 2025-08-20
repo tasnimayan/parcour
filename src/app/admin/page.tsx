@@ -1,3 +1,14 @@
+import { SystemOverview } from "@/components/admin/dashboard/system-overview";
+import { PageHeader } from "@/components/admin/shared/page-header";
+
 export default function Home() {
-  return <div>AdminDashboard</div>;
+  return (
+    <>
+      <PageHeader
+        title="Dashboard"
+        subtitle="Welcome back, Tasnim Chow! Manage your logistics operations from here."
+      />
+      <SystemOverview />
+    </>
+  );
 }
