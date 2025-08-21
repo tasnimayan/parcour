@@ -1,3 +1,11 @@
+import { SystemOverview } from "@/components/admin/dashboard/system-overview";
+import { PageHeader } from "@/components/admin/shared/page-header";
+
 export default function Page() {
-  return <div>SystemOverview</div>;
+  return (
+    <>
+      <PageHeader title="Analytics" subtitle="View and analyze your logistics operations" />
+      <SystemOverview />
+    </>
+  );
 }

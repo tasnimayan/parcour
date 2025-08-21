@@ -1,12 +1,6 @@
 // Mock data and types for parcel management
 export type ParcelSize = "small" | "medium" | "large" | "extra-large";
-export type ParcelStatus =
-  | "pending"
-  | "picked-up"
-  | "in-transit"
-  | "out-for-delivery"
-  | "delivered"
-  | "failed";
+export type ParcelStatus = "pending" | "picked-up" | "in-transit" | "out-for-delivery" | "delivered" | "failed";
 export type PaymentType = "cod" | "prepaid";
 
 export interface Address {
@@ -143,25 +137,18 @@ export const createParcel = async (
   return newParcel;
 };
 
-export const getCustomerParcels = async (
-  customerId: string
-): Promise<Parcel[]> => {
+export const getCustomerParcels = async (customerId: string): Promise<Parcel[]> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 500));
 
   return mockParcels.filter((parcel) => parcel.customerId === customerId);
 };
 
-export const getParcelByTrackingNumber = async (
-  trackingNumber: string
-): Promise<Parcel | null> => {
+export const getParcelByTrackingNumber = async (trackingNumber: string): Promise<Parcel | null> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  return (
-    mockParcels.find((parcel) => parcel.trackingNumber === trackingNumber) ||
-    null
-  );
+  return mockParcels.find((parcel) => parcel.trackingNumber === trackingNumber) || null;
 };
 
 export const getParcelSizePrice = (size: ParcelSize): number => {
@@ -201,11 +188,7 @@ export const getAgentParcels = async (agentId: string): Promise<Parcel[]> => {
   return mockParcels.filter((parcel) => parcel.agentId === agentId);
 };
 
-export const updateParcelStatus = async (
-  parcelId: string,
-  status: ParcelStatus,
-  agentId: string
-): Promise<Parcel> => {
+export const updateParcelStatus = async (parcelId: string, status: ParcelStatus, agentId: string): Promise<Parcel> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -223,18 +206,13 @@ export const updateParcelStatus = async (
   mockParcels[parcelIndex] = {
     ...parcel,
     status,
-    actualDelivery:
-      status === "delivered" ? new Date().toISOString() : parcel.actualDelivery,
+    actualDelivery: status === "delivered" ? new Date().toISOString() : parcel.actualDelivery,
   };
 
   return mockParcels[parcelIndex];
 };
 
-export const assignParcelToAgent = async (
-  parcelId: string,
-  agentId: string,
-  agentName: string
-): Promise<Parcel> => {
+export const assignParcelToAgent = async (parcelId: string, agentId: string, agentName: string): Promise<Parcel> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -262,15 +240,12 @@ export interface RouteStop {
   completed: boolean;
 }
 
-export const getOptimizedRoute = async (
-  agentId: string
-): Promise<RouteStop[]> => {
+export const getOptimizedRoute = async (agentId: string): Promise<RouteStop[]> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const agentParcels = mockParcels.filter(
-    (p) =>
-      p.agentId === agentId && p.status !== "delivered" && p.status !== "failed"
+    (p) => p.agentId === agentId && p.status !== "delivered" && p.status !== "failed"
   );
 
   const stops: RouteStop[] = [];
@@ -291,12 +266,7 @@ export const getOptimizedRoute = async (
 
   // Add delivery stops for picked up parcels
   agentParcels
-    .filter(
-      (p) =>
-        p.status === "picked-up" ||
-        p.status === "in-transit" ||
-        p.status === "out-for-delivery"
-    )
+    .filter((p) => p.status === "picked-up" || p.status === "in-transit" || p.status === "out-for-delivery")
     .forEach((parcel) => {
       stops.push({
         id: `delivery-${parcel.id}`,
@@ -320,9 +290,7 @@ export const getAgentStats = async (agentId: string) => {
   return {
     totalAssigned: agentParcels.length,
     pending: agentParcels.filter((p) => p.status === "pending").length,
-    inProgress: agentParcels.filter((p) =>
-      ["picked-up", "in-transit", "out-for-delivery"].includes(p.status)
-    ).length,
+    inProgress: agentParcels.filter((p) => ["picked-up", "in-transit", "out-for-delivery"].includes(p.status)).length,
     delivered: agentParcels.filter((p) => p.status === "delivered").length,
     failed: agentParcels.filter((p) => p.status === "failed").length,
   };
