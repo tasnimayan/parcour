@@ -1,32 +1,32 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Download, FileSpreadsheet, Users, Package } from "lucide-react"
-import { exportToCSV, generateParcelReport, generateUserReport, generateFinancialReport } from "@/lib/export-utils"
-import { getAllParcels } from "@/lib/parcel-data"
-import { getAllUsers } from "@/lib/auth"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Download, FileSpreadsheet, Users, Package } from "lucide-react";
+import { exportToCSV, generateParcelReport, generateUserReport, generateFinancialReport } from "@/lib/export-utils";
+import { getAllParcels } from "@/lib/parcel-data";
+import { getAllUsers } from "@/lib/admin";
 
 export function QuickExports() {
   const handleQuickExport = (type: "parcels" | "users" | "financial") => {
-    let reportData
+    let reportData;
 
     switch (type) {
       case "parcels":
-        const parcels = getAllParcels()
-        reportData = generateParcelReport(parcels)
-        break
+        const parcels = getAllParcels();
+        reportData = generateParcelReport(parcels);
+        break;
       case "users":
-        const users = getAllUsers()
-        reportData = generateUserReport(users)
-        break
+        const users = getAllUsers();
+        reportData = generateUserReport(users);
+        break;
       case "financial":
-        const allParcels = getAllParcels()
-        reportData = generateFinancialReport(allParcels)
-        break
+        const allParcels = getAllParcels();
+        reportData = generateFinancialReport(allParcels);
+        break;
     }
 
-    exportToCSV(reportData)
-  }
+    exportToCSV(reportData);
+  };
 
   return (
     <Card>
@@ -52,5 +52,5 @@ export function QuickExports() {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

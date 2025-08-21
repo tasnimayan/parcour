@@ -21,16 +21,9 @@ interface ParcelTableProps {
   selectedParcels: string[];
   onSelectParcel: (parcelId: string, isSelected: boolean) => void;
   onSelectAll: (isSelected: boolean) => void;
-  onAssignAgent: (parcelId: string, agentId: string) => void;
 }
 
-export const ParcelTable = ({
-  parcels,
-  selectedParcels,
-  onSelectParcel,
-  onSelectAll,
-  onAssignAgent,
-}: ParcelTableProps) => {
+export const ParcelTable = ({ parcels, selectedParcels, onSelectParcel, onSelectAll }: ParcelTableProps) => {
   const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
 
@@ -73,6 +66,15 @@ export const ParcelTable = ({
       minute: "2-digit",
     });
   };
+
+  if (!parcels.length)
+    return (
+      <div className="text-center py-12 text-muted-foreground">
+        <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
+        <p className="text-lg font-medium">No parcels found</p>
+        <p className="text-sm">Try adjusting your search criteria</p>
+      </div>
+    );
 
   return (
     <div>
@@ -219,19 +221,12 @@ export const ParcelTable = ({
         </TableBody>
       </Table>
 
-      {parcels.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-lg font-medium">No parcels found</p>
-          <p className="text-sm">Try adjusting your search criteria</p>
-        </div>
-      )}
       <AgentAssignmentDialog
         isOpen={isAssignDialogOpen}
         onClose={() => setIsAssignDialogOpen(false)}
         parcel={selectedParcel}
         agents={mockAgents}
-        onAssignAgent={onAssignAgent}
+        onAssignAgent={(parcelIds, agentId) => console.log(parcelIds, agentId)}
       />
     </div>
   );

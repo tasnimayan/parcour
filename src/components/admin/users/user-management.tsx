@@ -2,10 +2,10 @@
 import { useState, useMemo } from "react";
 import { UserFilters } from "./user-filters";
 import { UserTable } from "./user-table";
-import { UserPagination } from "../shared/user-pagination";
+import { UserPagination } from "../../shared/user-pagination";
 import { mockUsers } from "@/lib/users-data";
 
-const UsersTable = () => {
+export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -20,8 +20,7 @@ const UsersTable = () => {
         user.location.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesRole = selectedRole === "all" || user.role === selectedRole;
-      const matchesStatus =
-        selectedStatus === "all" || user.status === selectedStatus;
+      const matchesStatus = selectedStatus === "all" || user.status === selectedStatus;
 
       return matchesSearch && matchesRole && matchesStatus;
     });
@@ -47,11 +46,7 @@ const UsersTable = () => {
         onStatusChange={setSelectedStatus}
       />
 
-      <UserTable
-        users={filteredUsers}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
-      />
+      <UserTable users={filteredUsers} currentPage={currentPage} itemsPerPage={itemsPerPage} />
 
       <UserPagination
         currentPage={currentPage}
@@ -62,6 +57,4 @@ const UsersTable = () => {
       />
     </div>
   );
-};
-
-export default UsersTable;
+}

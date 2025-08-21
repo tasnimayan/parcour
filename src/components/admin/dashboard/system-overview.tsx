@@ -1,42 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  getSystemMetrics,
-  getDailyStats,
-  type SystemMetrics,
-  type DailyStats,
-} from "@/lib/admin-data";
-import {
-  Users,
-  Package,
-  TrendingUp,
-  DollarSign,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  Truck,
-} from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from "recharts";
-import { MetricCard } from "../shared/metric-card";
-import { LoadingState } from "../shared/loading-state";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getSystemMetrics, getDailyStats, type SystemMetrics, type DailyStats } from "@/lib/admin-data";
+import { Users, Package, TrendingUp, DollarSign, Clock, AlertTriangle, CheckCircle, Truck } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { MetricCard } from "../../shared/metric-card";
+import { LoadingState } from "../../shared/loading-state";
 
 const METRIC_CONFIGS = [
   {
@@ -112,10 +82,7 @@ export function SystemOverview() {
 
   const loadData = async () => {
     try {
-      const [metricsData, statsData] = await Promise.all([
-        getSystemMetrics(),
-        getDailyStats(),
-      ]);
+      const [metricsData, statsData] = await Promise.all([getSystemMetrics(), getDailyStats()]);
       setMetrics(metricsData);
       setDailyStats(statsData);
     } catch (error) {
@@ -132,17 +99,11 @@ export function SystemOverview() {
     });
 
   const calculateSuccessRate = () =>
-    metrics
-      ? Math.round((metrics.deliveredParcels / metrics.totalParcels) * 100)
-      : 0;
+    metrics ? Math.round((metrics.deliveredParcels / metrics.totalParcels) * 100) : 0;
 
-  const calculateFailureRate = () =>
-    metrics
-      ? Math.round((metrics.failedParcels / metrics.totalParcels) * 100)
-      : 0;
+  const calculateFailureRate = () => (metrics ? Math.round((metrics.failedParcels / metrics.totalParcels) * 100) : 0);
 
-  const calculateAvgOrderValue = () =>
-    metrics ? Math.round(metrics.totalRevenue / metrics.totalParcels) : 0;
+  const calculateAvgOrderValue = () => (metrics ? Math.round(metrics.totalRevenue / metrics.totalParcels) : 0);
 
   if (loading || !metrics) {
     return <LoadingState />;
@@ -152,11 +113,11 @@ export function SystemOverview() {
     <div className="space-y-6">
       {/* Key Metrics - Using reusable MetricCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {METRIC_CONFIGS.map(({ key, icon, label, color, bg, prefix = "" }) => (
+        {METRIC_CONFIGS.map(({ key, icon, label, color, bg }) => (
           <MetricCard
             key={key}
             icon={icon}
-            value={`${prefix}${metrics[key as keyof SystemMetrics]}`}
+            value={metrics[key as keyof SystemMetrics]}
             label={label}
             iconColor={color}
             bgColor={bg}
@@ -183,9 +144,7 @@ export function SystemOverview() {
         <Card>
           <CardHeader>
             <CardTitle>Daily Bookings Trend</CardTitle>
-            <CardDescription>
-              Parcel bookings over the last 7 days
-            </CardDescription>
+            <CardDescription>Parcel bookings over the last 7 days</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -193,15 +152,8 @@ export function SystemOverview() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" tickFormatter={formatChartDate} />
                 <YAxis />
-                <Tooltip
-                  labelFormatter={(date) => new Date(date).toLocaleDateString()}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="bookings"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                />
+                <Tooltip labelFormatter={(date) => new Date(date).toLocaleDateString()} />
+                <Line type="monotone" dataKey="bookings" stroke="hsl(var(--primary))" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -210,9 +162,7 @@ export function SystemOverview() {
         <Card>
           <CardHeader>
             <CardTitle>Daily Revenue</CardTitle>
-            <CardDescription>
-              Revenue generated over the last 7 days
-            </CardDescription>
+            <CardDescription>Revenue generated over the last 7 days</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -249,11 +199,7 @@ export function SystemOverview() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Admins</span>
-                <span className="font-medium">
-                  {metrics.totalUsers -
-                    metrics.totalCustomers -
-                    metrics.totalAgents}
-                </span>
+                <span className="font-medium">{metrics.totalUsers - metrics.totalCustomers - metrics.totalAgents}</span>
               </div>
             </div>
           </CardContent>
@@ -297,9 +243,7 @@ export function SystemOverview() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Failure Rate</span>
-                <span className="font-medium text-red-600">
-                  {calculateFailureRate()}%
-                </span>
+                <span className="font-medium text-red-600">{calculateFailureRate()}%</span>
               </div>
             </div>
           </CardContent>
