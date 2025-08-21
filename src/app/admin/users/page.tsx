@@ -1,5 +1,5 @@
-import UsersTable from "@/components/admin/users/users-table";
-import { PageHeader } from "@/components/admin/shared/page-header";
+import UserManagement from "@/components/admin/users/user-management";
+import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 
@@ -16,7 +16,7 @@ export default function Page() {
           Add User
         </Button>
       </PageHeader>
-      <UsersTable />
+      <UserManagement />
     </>
   );
 }

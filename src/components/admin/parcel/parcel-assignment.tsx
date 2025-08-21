@@ -9,17 +9,21 @@ import { mockParcels, mockAgents, Parcel } from "@/lib/mock-parcels";
 import { Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AgentAssignmentDialog } from "./agent-assign-modal";
-import { UserPagination } from "../shared/user-pagination";
+import { UserPagination } from "../../shared/user-pagination";
 
 const ITEMS_PER_PAGE = 10;
 
-interface ParcelHeaderProps {
+interface SelectionHeaderProps {
   selectedCount?: number;
   selectedParcels?: Parcel[];
   onBulkAssignAgent?: (agentId: string) => void;
 }
 
-export const ParcelHeader = ({ selectedCount = 0, selectedParcels = [], onBulkAssignAgent }: ParcelHeaderProps) => {
+export const SelectionHeader = ({
+  selectedCount = 0,
+  selectedParcels = [],
+  onBulkAssignAgent,
+}: SelectionHeaderProps) => {
   const [isBulkAssignDialogOpen, setIsBulkAssignDialogOpen] = useState(false);
   return (
     <>
@@ -149,13 +153,27 @@ export default function ParcelAssignment() {
     setSelectedParcels([]);
   };
 
+  const tabs = [
+    { value: "pending", label: "Pending", count: tabCounts.pending },
+    { value: "in_transit", label: "In Transit", count: tabCounts.in_transit },
+    { value: "delivered", label: "Delivered", count: tabCounts.delivered },
+    { value: "failed", label: "Failed", count: tabCounts.failed },
+    { value: "returned", label: "Returned", count: tabCounts.returned },
+  ];
+
+  const countColors = {
+    pending: "bg-primary text-primary-foreground",
+    in_transit: "bg-primary text-primary-foreground",
+    delivered: "bg-green-500 text-white",
+    failed: "bg-red-500 text-white",
+    returned: "bg-yellow-500 text-white",
+  };
+
   return (
     <div className="min-h-screen bg-background space-y-6">
       <ParcelFilters
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
         priorityFilter={priorityFilter}
         onPriorityFilterChange={setPriorityFilter}
         serviceFilter={serviceFilter}
@@ -164,46 +182,30 @@ export default function ParcelAssignment() {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-6">
-          <TabsTrigger value="pending" className="relative">
-            Pending
-            {tabCounts.pending > 0 && (
-              <span className="ml-2 bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
-                {tabCounts.pending}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="delivered" className="relative">
-            Delivered
-            {tabCounts.delivered > 0 && (
-              <span className="ml-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {tabCounts.delivered}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="failed" className="relative">
-            Failed
-            {tabCounts.failed > 0 && (
-              <span className="ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{tabCounts.failed}</span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="returned" className="relative">
-            Returned
-            {tabCounts.returned > 0 && (
-              <span className="ml-2 bg-yellow-500 text-yellow-900 text-xs px-2 py-0.5 rounded-full">
-                {tabCounts.returned}
-              </span>
-            )}
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 mb-6">
+          {tabs.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value} className="relative">
+              {tab.label}
+              {tab.count > 0 && (
+                <span
+                  className={`${
+                    countColors[tab.value as keyof typeof countColors]
+                  } ml-2 text-xs px-2 py-0.5 rounded-full`}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-foreground">
-                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Parcels ({filteredParcels.length})
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Parcels
               </h2>
-              <ParcelHeader
+              <SelectionHeader
                 selectedCount={selectedParcels.length}
                 onBulkAssignAgent={(agentId) => handleAssignAgent(selectedParcels, agentId)}
                 selectedParcels={
@@ -218,7 +220,6 @@ export default function ParcelAssignment() {
             selectedParcels={selectedParcels}
             onSelectParcel={handleSelectParcel}
             onSelectAll={handleSelectAll}
-            onAssignAgent={(parcelId, agentId) => handleAssignAgent(parcelId, agentId)}
           />
 
           {totalPages > 1 && (

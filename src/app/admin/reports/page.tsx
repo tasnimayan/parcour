@@ -1,6 +1,6 @@
 import { QuickExports } from "@/components/reports/quick-exports";
 import { ReportGenerator } from "@/components/reports/report-generator";
-import { PageHeader } from "@/components/admin/shared/page-header";
+import { PageHeader } from "@/components/shared/page-header";
 
 export default function Page() {
   return (

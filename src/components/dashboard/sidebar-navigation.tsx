@@ -34,20 +34,13 @@ const adminNavItems = [
 ];
 
 const agentNavItems = [
-  { path: "dashboard", label: "Dashboard", icon: Home },
-  { path: "parcels", label: "My Parcels", icon: Package },
-  { path: "routes", label: "Route Optimizer", icon: Route },
-  { path: "tracking", label: "Live Tracking", icon: MapPin },
-  { path: "history", label: "Delivery History", icon: Clock },
+  { path: "/agent", label: "Dashboard", icon: Home },
+  { path: "/agent/parcels", label: "My Parcels", icon: Package },
+  { path: "/agent/routes", label: "Route Optimizer", icon: Route },
+  { path: "/agent/history", label: "Delivery History", icon: Clock },
 ];
 
-function SidebarHeader({
-  isCollapsed,
-  toggleCollapse,
-}: {
-  isCollapsed: boolean;
-  toggleCollapse: () => void;
-}) {
+function SidebarHeader({ isCollapsed, toggleCollapse }: { isCollapsed: boolean; toggleCollapse: () => void }) {
   return (
     <div className="flex items-center justify-between p-4 border-b">
       {!isCollapsed && (
@@ -58,12 +51,7 @@ function SidebarHeader({
           <h2 className="font-bold">Parcour</h2>
         </div>
       )}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={toggleCollapse}
-        className="h-8 w-8 p-0"
-      >
+      <Button variant="ghost" size="sm" onClick={toggleCollapse} className="h-8 w-8 p-0">
         {isCollapsed ? <Menu className="w-4 h-4" /> : <X className="w-4 h-4" />}
       </Button>
     </div>
@@ -123,10 +111,7 @@ function NavigationList({
             <li key={item.path}>
               <Button
                 variant={isActive(item.path, true) ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start gap-3",
-                  isCollapsed && "px-2"
-                )}
+                className={cn("w-full justify-start gap-3", isCollapsed && "px-2")}
                 asChild
               >
                 <Link href={item.path}>
@@ -160,10 +145,7 @@ const SidebarNavigation = ({
         isCollapsed ? "w-16" : "w-64"
       )}
     >
-      <SidebarHeader
-        isCollapsed={isCollapsed}
-        toggleCollapse={() => setIsCollapsed((c) => !c)}
-      />
+      <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={() => setIsCollapsed((c) => !c)} />
       <NavigationList items={navItems} isCollapsed={isCollapsed} />
       <UserInfo user={user} isCollapsed={isCollapsed} />
 
@@ -189,13 +171,7 @@ export function AdminSidebarNav() {
     await logout();
   };
 
-  return (
-    <SidebarNavigation
-      navItems={adminNavItems}
-      user={user!}
-      onLogout={handleLogout}
-    />
-  );
+  return <SidebarNavigation navItems={adminNavItems} user={user!} onLogout={handleLogout} />;
 }
 
 export function AgentSidebarNav() {
@@ -206,11 +182,5 @@ export function AgentSidebarNav() {
     await logout();
   };
 
-  return (
-    <SidebarNavigation
-      navItems={agentNavItems}
-      user={user!}
-      onLogout={handleLogout}
-    />
-  );
+  return <SidebarNavigation navItems={agentNavItems} user={user!} onLogout={handleLogout} />;
 }
