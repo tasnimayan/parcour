@@ -20,23 +20,25 @@ import {
   Clock,
   LucideIcon,
 } from "lucide-react";
-import { User, UserRole } from "@/lib/auth";
+import { User, mockUsers } from "@/lib/auth";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 // Navigation item types and definitions
 const adminNavItems = [
-  { id: "overview", label: "Overview", icon: Home },
-  { id: "users", label: "User Mangement", icon: Users },
-  { id: "assignments", label: "Parcel Assignment", icon: Package },
-  { id: "analytics", label: "Analytics", icon: BarChart3 },
-  { id: "reports", label: "Reports", icon: FileText },
+  { path: "/admin", label: "Overview", icon: Home },
+  { path: "/admin/users", label: "User Mangement", icon: Users },
+  { path: "/admin/assignments", label: "Parcel Assignment", icon: Package },
+  { path: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { path: "/admin/reports", label: "Reports", icon: FileText },
 ];
 
 const agentNavItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "parcels", label: "My Parcels", icon: Package },
-  { id: "routes", label: "Route Optimizer", icon: Route },
-  { id: "tracking", label: "Live Tracking", icon: MapPin },
-  { id: "history", label: "Delivery History", icon: Clock },
+  { path: "dashboard", label: "Dashboard", icon: Home },
+  { path: "parcels", label: "My Parcels", icon: Package },
+  { path: "routes", label: "Route Optimizer", icon: Route },
+  { path: "tracking", label: "Live Tracking", icon: MapPin },
+  { path: "history", label: "Delivery History", icon: Clock },
 ];
 
 function SidebarHeader({
@@ -92,34 +94,45 @@ function UserInfo({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
   );
 }
 
+export function useActivePath() {
+  const pathname = usePathname();
+
+  const isActive = (path: string, exact: boolean = false): boolean => {
+    if (exact) {
+      return pathname === path;
+    }
+    return pathname.startsWith(path);
+  };
+  return { pathname, isActive };
+}
+
 function NavigationList({
   items,
-  activeTab,
-  onTabChange,
   isCollapsed,
 }: {
-  items: { id: string; label: string; icon: LucideIcon }[];
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  items: { path: string; label: string; icon: LucideIcon }[];
   isCollapsed: boolean;
 }) {
+  const { isActive } = useActivePath();
   return (
     <nav className="flex-1 p-4">
       <ul className="space-y-2">
         {items.map((item) => {
           const Icon = item.icon;
           return (
-            <li key={item.id}>
+            <li key={item.path}>
               <Button
-                variant={activeTab === item.id ? "default" : "ghost"}
+                variant={isActive(item.path, true) ? "default" : "ghost"}
                 className={cn(
                   "w-full justify-start gap-3",
                   isCollapsed && "px-2"
                 )}
-                onClick={() => onTabChange(item.id)}
+                asChild
               >
-                <Icon className="w-4 h-4" />
-                {!isCollapsed && <span>{item.label}</span>}
+                <Link href={item.path}>
+                  <Icon className="w-4 h-4" />
+                  {!isCollapsed && <span>{item.label}</span>}
+                </Link>
               </Button>
             </li>
           );
@@ -129,27 +142,21 @@ function NavigationList({
   );
 }
 
-export function AdminSidebarNav() {
-  const [activeTab, setActiveTab] = useState("overview");
-
-  const { logout } = useAuth();
-  const user = {
-    id: "1",
-    email: "admin@courier.com",
-    name: "Admin User",
-    role: "admin" as UserRole,
-    phone: "01645800408",
-  };
+const SidebarNavigation = ({
+  navItems,
+  user,
+  onLogout,
+}: {
+  navItems: { path: string; label: string; icon: LucideIcon }[];
+  user: User;
+  onLogout: () => void;
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const handleLogout = async () => {
-    await logout();
-  };
 
   return (
     <div
       className={cn(
-        "flex flex-col h-screen bg-card border-r transition-all duration-300",
+        "flex flex-col h-scree overflow-y-auto bg-card border-r transition-all duration-300",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
@@ -157,19 +164,14 @@ export function AdminSidebarNav() {
         isCollapsed={isCollapsed}
         toggleCollapse={() => setIsCollapsed((c) => !c)}
       />
-      <NavigationList
-        items={adminNavItems}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        isCollapsed={isCollapsed}
-      />
+      <NavigationList items={navItems} isCollapsed={isCollapsed} />
       <UserInfo user={user} isCollapsed={isCollapsed} />
 
       <div className="p-4 border-t">
         <Button
           variant="outline"
           className={cn("w-full justify-start gap-3", isCollapsed && "px-2")}
-          onClick={handleLogout}
+          onClick={onLogout}
         >
           <LogOut className="w-4 h-4" />
           {!isCollapsed && <span>Logout</span>}
@@ -177,54 +179,38 @@ export function AdminSidebarNav() {
       </div>
     </div>
   );
-}
+};
 
-export function AgentSidebarNav() {
-  const [activeTab, setActiveTab] = useState("overview");
-
+export function AdminSidebarNav() {
   const { logout } = useAuth();
-  const user = {
-    id: "2",
-    email: "agent@courier.com",
-    name: "John Delivery",
-    role: "agent" as UserRole,
-    phone: "01752100936",
-  };
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const user = mockUsers.find((user) => user.role === "admin");
 
   const handleLogout = async () => {
     await logout();
   };
 
   return (
-    <div
-      className={cn(
-        "flex flex-col h-screen bg-card border-r transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64"
-      )}
-    >
-      <SidebarHeader
-        isCollapsed={isCollapsed}
-        toggleCollapse={() => setIsCollapsed((c) => !c)}
-      />
-      <NavigationList
-        items={agentNavItems}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        isCollapsed={isCollapsed}
-      />
-      <UserInfo user={user} isCollapsed={isCollapsed} />
+    <SidebarNavigation
+      navItems={adminNavItems}
+      user={user!}
+      onLogout={handleLogout}
+    />
+  );
+}
 
-      <div className="p-4 border-t">
-        <Button
-          variant="outline"
-          className={cn("w-full justify-start gap-3", isCollapsed && "px-2")}
-          onClick={handleLogout}
-        >
-          <LogOut className="w-4 h-4" />
-          {!isCollapsed && <span>Logout</span>}
-        </Button>
-      </div>
-    </div>
+export function AgentSidebarNav() {
+  const { logout } = useAuth();
+  const user = mockUsers.find((user) => user.role === "agent");
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  return (
+    <SidebarNavigation
+      navItems={agentNavItems}
+      user={user!}
+      onLogout={handleLogout}
+    />
   );
 }
