@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Route, Clock, Fuel, Navigation, RotateCcw, Play } from "lucide-react";
+import { MapPin, Route, Clock, Fuel, Navigation, Play } from "lucide-react";
 
 interface RouteStop {
   id: string;
@@ -15,23 +15,13 @@ interface RouteStop {
 }
 
 export default function RouteOptimizer() {
-  const [isOptimizing, setIsOptimizing] = useState(false);
-  const [route, setRoute] = useState<RouteStop[]>(mockRoute);
+  const [route] = useState<RouteStop[]>(mockRoute);
   const [routeStats] = useState({
     totalDistance: "47.2 km",
     estimatedTime: "4h 15m",
     fuelCost: "$18.50",
     totalStops: route.length,
   });
-
-  const handleOptimizeRoute = async () => {
-    setIsOptimizing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsOptimizing(false);
-      // In real app, this would update with optimized route
-    }, 2000);
-  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {

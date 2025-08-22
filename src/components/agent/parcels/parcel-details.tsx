@@ -39,6 +39,7 @@ const ParcelDetails = () => {
   const [newStatus, setNewStatus] = useState<ParcelStatus>(parcel.status);
   const [deliveryNotes, setDeliveryNotes] = useState("");
 
+  console.log(id);
   const handleStatusUpdate = () => {
     setParcel((prev) => ({ ...prev, status: newStatus }));
     toast("Status Updated");

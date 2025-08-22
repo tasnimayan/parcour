@@ -1,31 +1,24 @@
 "use client";
 
+import { useActivePath } from "@/lib/utils";
 import { useAuth } from "../contexts/auth-context";
 import { Button } from "@/components/ui/button";
-import {
-  Package,
-  User,
-  LogOut,
-  Home,
-  History,
-  MapPin,
-  Plus,
-} from "lucide-react";
-import { useState } from "react";
+import { Package, User, LogOut, Home, History, MapPin, Plus } from "lucide-react";
+import Link from "next/link";
 
 export function TopNavigation() {
-  const [activeTab, onTabChange] = useState("dashboard");
   const { user, logout } = useAuth();
+  const { isActive } = useActivePath();
 
   const handleLogout = async () => {
     await logout();
   };
 
   const navigationItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "book", label: "Book Parcel", icon: Plus },
-    { id: "track", label: "Track Parcel", icon: MapPin },
-    { id: "history", label: "Parcel History", icon: History },
+    { path: "/customer", label: "Dashboard", icon: Home },
+    { path: "/customer/book", label: "Book Parcel", icon: Plus },
+    { path: "/customer/track", label: "Track Parcel", icon: MapPin },
+    { path: "/customer/history", label: "Parcel History", icon: History },
   ];
 
   return (
@@ -36,7 +29,7 @@ export function TopNavigation() {
           <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
             <Package className="w-4 h-4 text-primary-foreground" />
           </div>
-          <h1 className="text-xl font-bold">CourierPro</h1>
+          <h1 className="text-xl font-bold">Parcour</h1>
         </div>
 
         {/* Navigation */}
@@ -45,13 +38,15 @@ export function TopNavigation() {
             const Icon = item.icon;
             return (
               <Button
-                key={item.id}
-                variant={activeTab === item.id ? "default" : "ghost"}
-                className="gap-2"
-                onClick={() => onTabChange(item.id)}
+                key={item.path}
+                variant={isActive(item.path, true) ? "secondary" : "ghost"}
+                className="gap-2 transition-colors"
+                asChild
               >
-                <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
+                <Link href={item.path}>
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Link>
               </Button>
             );
           })}
@@ -78,11 +73,10 @@ export function TopNavigation() {
             const Icon = item.icon;
             return (
               <Button
-                key={item.id}
-                variant={activeTab === item.id ? "default" : "ghost"}
+                key={item.path}
+                variant={isActive(item.path, true) ? "default" : "ghost"}
                 size="sm"
-                className="flex-col gap-1 h-auto py-2"
-                onClick={() => onTabChange(item.id)}
+                className="flex-col gap-1 h-auto py-2 transition-colors"
               >
                 <Icon className="w-4 h-4" />
                 <span className="text-xs">{item.label}</span>
