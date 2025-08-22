@@ -3,14 +3,13 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/auth-context";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, useActivePath } from "@/lib/utils";
 import {
   Package,
   Truck,
   Settings,
   Users,
   BarChart3,
-  MapPin,
   FileText,
   LogOut,
   Menu,
@@ -24,7 +23,7 @@ import { User, mockUsers } from "@/lib/auth";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-// Navigation item types and definitions
+// Navigation item
 const adminNavItems = [
   { path: "/admin", label: "Overview", icon: Home },
   { path: "/admin/users", label: "User Mangement", icon: Users },
@@ -80,18 +79,6 @@ function UserInfo({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
       </div>
     </div>
   );
-}
-
-export function useActivePath() {
-  const pathname = usePathname();
-
-  const isActive = (path: string, exact: boolean = false): boolean => {
-    if (exact) {
-      return pathname === path;
-    }
-    return pathname.startsWith(path);
-  };
-  return { pathname, isActive };
 }
 
 function NavigationList({

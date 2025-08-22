@@ -5,10 +5,9 @@ export interface ExportData {
 }
 
 export function exportToCSV(data: ExportData) {
-  const csvContent = [
-    data.headers.join(","),
-    ...data.rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
-  ].join("\n");
+  const csvContent = [data.headers.join(","), ...data.rows.map((row) => row.map((cell) => `"${cell}"`).join(","))].join(
+    "\n"
+  );
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
@@ -43,10 +42,7 @@ export function exportToPDF(data: ExportData) {
   document.body.removeChild(link);
 }
 
-export function generateParcelReport(
-  parcels: any[],
-  dateRange?: { from: Date; to: Date }
-) {
+export function generateParcelReport(parcels: any[], dateRange?: { from: Date; to: Date }) {
   let filteredParcels = parcels;
 
   if (dateRange) {
@@ -98,10 +94,7 @@ export function generateUserReport(users: any[]) {
   };
 }
 
-export function generateFinancialReport(
-  parcels: any[],
-  dateRange?: { from: Date; to: Date }
-) {
+export function generateFinancialReport(parcels: any[], dateRange?: { from: Date; to: Date }) {
   let filteredParcels = parcels;
 
   if (dateRange) {
@@ -111,10 +104,7 @@ export function generateFinancialReport(
     });
   }
 
-  const totalRevenue = filteredParcels.reduce(
-    (sum, parcel) => sum + parcel.amount,
-    0
-  );
+  const totalRevenue = filteredParcels.reduce((sum, parcel) => sum + parcel.amount, 0);
   const codAmount = filteredParcels
     .filter((p) => p.paymentType === "COD")
     .reduce((sum, parcel) => sum + parcel.amount, 0);
@@ -129,20 +119,9 @@ export function generateFinancialReport(
       ["Total Revenue", `₹${totalRevenue}`],
       ["COD Collections", `₹${codAmount}`],
       ["Prepaid Revenue", `₹${prepaidAmount}`],
-      [
-        "Delivered Parcels",
-        filteredParcels.filter((p) => p.status === "Delivered").length,
-      ],
-      [
-        "Pending Parcels",
-        filteredParcels.filter(
-          (p) => p.status !== "Delivered" && p.status !== "Failed"
-        ).length,
-      ],
-      [
-        "Failed Deliveries",
-        filteredParcels.filter((p) => p.status === "Failed").length,
-      ],
+      ["Delivered Parcels", filteredParcels.filter((p) => p.status === "Delivered").length],
+      ["Pending Parcels", filteredParcels.filter((p) => p.status !== "Delivered" && p.status !== "Failed").length],
+      ["Failed Deliveries", filteredParcels.filter((p) => p.status === "Failed").length],
     ],
     filename: `financial-report-${new Date().toISOString().split("T")[0]}`,
   };
