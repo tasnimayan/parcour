@@ -20,7 +20,6 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { User, mockUsers } from "@/lib/auth";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 // Navigation item

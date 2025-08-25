@@ -4,7 +4,7 @@ export type ParcelService = "standard" | "express" | "urgent";
 
 export interface Parcel {
   id: string;
-  customerId: string;
+  customerId?: string;
   trackingCode: string;
   recipientName: string;
   recipientPhone: string;

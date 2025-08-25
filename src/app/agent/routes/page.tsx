@@ -1,3 +1,4 @@
+"use client";
 import RouteOptimizer from "@/components/agent/route/route-optimizer";
 import { PageHeader } from "@/components/shared/page-header";
 import { Route } from "lucide-react";
