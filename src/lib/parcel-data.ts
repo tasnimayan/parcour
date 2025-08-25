@@ -1,3 +1,5 @@
+import { mockUsers } from "./auth-api";
+
 // Mock data and types for parcel management
 export type ParcelSize = "small" | "medium" | "large" | "extra-large";
 export type ParcelStatus = "pending" | "assigned" | "picked_up" | "in_transit" | "delivered" | "failed";
@@ -294,19 +296,4 @@ export const getAgentStats = async (agentId: string) => {
     delivered: agentParcels.filter((p) => p.status === "delivered").length,
     failed: agentParcels.filter((p) => p.status === "failed").length,
   };
-};
-
-// Export function for reports functionality
-export const getAllParcels = (): Parcel[] => {
-  return mockParcels;
-};
-
-export const getUnassignedParcels = (): Parcel[] => {
-  return mockParcels.filter((parcel) => !parcel.agentId);
-};
-
-export const getAvailableAgents = async () => {
-  // Import here to avoid circular dependency
-  const { getDeliveryAgents } = await import("./admin");
-  return getDeliveryAgents();
 };

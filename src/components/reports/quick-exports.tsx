@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, FileSpreadsheet, Users, Package } from "lucide-react";
 import { exportToCSV, generateParcelReport, generateUserReport, generateFinancialReport } from "@/lib/export-utils";
-import { getAllParcels } from "@/lib/parcel-data";
-import { getAllUsers } from "@/lib/admin";
+import { mockParcels } from "@/lib/parcel-data";
+import { mockUsers } from "@/lib/users-data";
 
 export function QuickExports() {
   const handleQuickExport = (type: "parcels" | "users" | "financial") => {
@@ -12,15 +12,15 @@ export function QuickExports() {
 
     switch (type) {
       case "parcels":
-        const parcels = getAllParcels();
+        const parcels = mockParcels;
         reportData = generateParcelReport(parcels);
         break;
       case "users":
-        const users = getAllUsers();
+        const users = mockUsers;
         reportData = generateUserReport(users);
         break;
       case "financial":
-        const allParcels = getAllParcels();
+        const allParcels = mockParcels;
         reportData = generateFinancialReport(allParcels);
         break;
     }

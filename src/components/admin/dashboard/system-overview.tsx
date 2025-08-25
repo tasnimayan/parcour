@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSystemMetrics, getDailyStats, type SystemMetrics, type DailyStats } from "@/lib/admin-data";
-import { Users, Package, TrendingUp, DollarSign, Clock, AlertTriangle, CheckCircle, Truck } from "lucide-react";
+import { Users, Package, TrendingUp, Clock, AlertTriangle, CheckCircle, Truck, User } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { MetricCard } from "../../shared/metric-card";
 import { LoadingState } from "../../shared/loading-state";
+import { getStatsCounts } from "@/lib/admin-api";
+import { useQuery } from "@tanstack/react-query";
+import SummaryCard from "./summary-card";
 
 const METRIC_CONFIGS = [
   {
@@ -20,23 +23,23 @@ const METRIC_CONFIGS = [
     key: "totalParcels",
     icon: Package,
     label: "Total Parcels",
-    color: "text-accent",
-    bg: "bg-accent/10",
+    color: "text-orange-600",
+    bg: "bg-orange-100",
   },
   {
-    key: "totalRevenue",
-    icon: DollarSign,
-    label: "Total Revenue",
-    color: "text-green-600",
-    bg: "bg-green-100",
-    prefix: "$",
-  },
-  {
-    key: "dailyBookings",
+    key: "todayBookings",
     icon: TrendingUp,
     label: "Today's Bookings",
     color: "text-blue-600",
     bg: "bg-blue-100",
+  },
+  {
+    key: "deliveredParcels",
+    icon: CheckCircle,
+    label: "Delivered Parcels",
+    color: "text-green-600",
+    bg: "bg-green-100",
+    prefix: "$",
   },
 ] as const;
 
@@ -49,18 +52,18 @@ const STATUS_CONFIGS = [
     bg: "bg-yellow-100",
   },
   {
+    key: "assignedParcels",
+    icon: User,
+    label: "Assigned",
+    color: "text-orange-600",
+    bg: "bg-orange-100",
+  },
+  {
     key: "inTransitParcels",
     icon: Truck,
     label: "In Transit",
     color: "text-blue-600",
     bg: "bg-blue-100",
-  },
-  {
-    key: "deliveredParcels",
-    icon: CheckCircle,
-    label: "Delivered",
-    color: "text-green-600",
-    bg: "bg-green-100",
   },
   {
     key: "failedParcels",
@@ -74,7 +77,6 @@ const STATUS_CONFIGS = [
 export function SystemOverview() {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadData();
@@ -87,8 +89,6 @@ export function SystemOverview() {
       setDailyStats(statsData);
     } catch (error) {
       console.error("Failed to load system data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -98,44 +98,33 @@ export function SystemOverview() {
       day: "numeric",
     });
 
-  const calculateSuccessRate = () =>
-    metrics ? Math.round((metrics.deliveredParcels / metrics.totalParcels) * 100) : 0;
+  const {
+    data: stats,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["statsCounts"],
+    queryFn: getStatsCounts,
+    select: (data) => data.data,
+  });
 
-  const calculateFailureRate = () => (metrics ? Math.round((metrics.failedParcels / metrics.totalParcels) * 100) : 0);
-
-  const calculateAvgOrderValue = () => (metrics ? Math.round(metrics.totalRevenue / metrics.totalParcels) : 0);
-
-  if (loading || !metrics) {
-    return <LoadingState />;
-  }
+  if (isLoading) return <LoadingState />;
+  if (isError) return <div>Error loading stats counts</div>;
+  if (!stats) return null;
 
   return (
     <div className="space-y-6">
       {/* Key Metrics - Using reusable MetricCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {METRIC_CONFIGS.map(({ key, icon, label, color, bg }) => (
-          <MetricCard
-            key={key}
-            icon={icon}
-            value={metrics[key as keyof SystemMetrics]}
-            label={label}
-            iconColor={color}
-            bgColor={bg}
-          />
+          <MetricCard key={key} icon={icon} value={stats[key]} label={label} iconColor={color} bgColor={bg} />
         ))}
       </div>
 
       {/* Status Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {STATUS_CONFIGS.map(({ key, icon, label, color, bg }) => (
-          <MetricCard
-            key={key}
-            icon={icon}
-            value={metrics[key as keyof SystemMetrics]}
-            label={label}
-            iconColor={color}
-            bgColor={bg}
-          />
+          <MetricCard key={key} icon={icon} value={stats[key]} label={label} iconColor={color} bgColor={bg} />
         ))}
       </div>
 
@@ -181,74 +170,7 @@ export function SystemOverview() {
         </Card>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>User Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Customers</span>
-                <span className="font-medium">{metrics.totalCustomers}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Delivery Agents</span>
-                <span className="font-medium">{metrics.totalAgents}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Admins</span>
-                <span className="font-medium">{metrics.totalUsers - metrics.totalCustomers - metrics.totalAgents}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Financial Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Total Revenue</span>
-                <span className="font-medium">${metrics.totalRevenue}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">COD Amount</span>
-                <span className="font-medium">${metrics.codAmount}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Avg. Order Value</span>
-                <span className="font-medium">${calculateAvgOrderValue()}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance Metrics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Success Rate</span>
-                <span className="font-medium">{calculateSuccessRate()}%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Avg. Delivery Time</span>
-                <span className="font-medium">{metrics.avgDeliveryTime}h</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Failure Rate</span>
-                <span className="font-medium text-red-600">{calculateFailureRate()}%</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <SummaryCard />
     </div>
   );
 }

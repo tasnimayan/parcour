@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 export function LoadingState() {
   return (
@@ -8,5 +8,5 @@ export function LoadingState() {
         <Loader2 className="w-8 h-8 animate-spin" />
       </CardContent>
     </Card>
-  )
+  );
 }

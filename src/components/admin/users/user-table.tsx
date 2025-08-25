@@ -10,41 +10,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  role: string;
-  status: "active" | "inactive" | "pending";
-  location: string;
-  joinDate: string;
-  lastActive?: string;
-  avatar?: string;
-}
+import { MetaData, UserData, getAllUsers } from "@/lib/admin-api";
+import { useQuery } from "@tanstack/react-query";
+import { UserRole, UserStatus } from "@/types";
+import { LoadingState } from "@/components/shared/loading-state";
+import { UserPagination } from "@/components/shared/user-pagination";
+import { usePaginationState } from "@/hooks/use-pagination";
 
 interface UserTableProps {
-  users: User[];
+  users: UserData[];
   currentPage: number;
   itemsPerPage: number;
 }
 
-const StatusDropdown = ({
-  status,
-  onChange,
-}: {
-  status: User["status"];
-  onChange: (newStatus: User["status"]) => void;
-}) => {
+const StatusDropdown = ({ status, onChange }: { status: UserStatus; onChange: (newStatus: UserStatus) => void }) => {
   const colors = {
+    pending: "bg-red-100 text-red-600",
     active: "bg-green-600 text-white",
     inactive: "bg-muted text-muted-foreground",
-    pending: "bg-red-100 text-red-600",
   };
 
   return (
@@ -98,8 +85,9 @@ export function UserTable({ users, currentPage, itemsPerPage }: UserTableProps) 
     { id: "joinDate", label: "Join Date" },
     { id: "actions", label: "Actions", style: "text-right" },
   ];
+
   return (
-    <Table>
+    <Table className="flex-1">
       <TableHeader>
         <TableRow className="bg-muted">
           <TableHead className="w-12">
@@ -127,29 +115,31 @@ export function UserTable({ users, currentPage, itemsPerPage }: UserTableProps) 
             <TableCell>
               <div className="flex items-center space-x-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  {/* <AvatarImage src={user.avatar} alt={user.profile.fullName} /> */}
                   <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                    {user.name[0].toUpperCase()}
+                    {user.profile.fullName[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-medium text-foreground">{user.name}</div>
-                  <div className="text-sm text-muted-foreground">{user.email || user.phone}</div>
+                  <div className="font-medium text-foreground">{user.profile.fullName}</div>
+                  <div className="text-sm text-muted-foreground">{user.email}</div>
                 </div>
               </div>
             </TableCell>
             <TableCell>{getRoleBadge(user.role)}</TableCell>
             <TableCell>
-              <StatusDropdown status={user.status} onChange={(newStatus) => console.log(newStatus)} />
-              {/* {getStatusBadge(user.status)} */}
+              <StatusDropdown
+                status={user.status.toLowerCase() as UserStatus}
+                onChange={(newStatus) => console.log(newStatus)}
+              />
             </TableCell>
             <TableCell>
               <div className="flex items-center space-x-1">
                 <MapPin className="h-3 w-3 text-muted-foreground" />
-                <span className="text-sm">{user.location}</span>
+                <span className="text-sm">{user.profile.phone}</span>
               </div>
             </TableCell>
-            <TableCell className="text-sm text-muted-foreground">{user.joinDate}</TableCell>
+            <TableCell className="text-sm text-muted-foreground">{user.createdAt}</TableCell>
             <TableCell className="text-right">
               <UserActions userId={user.id} />
             </TableCell>
@@ -192,3 +182,44 @@ const UserActions = ({ userId }: { userId: string }) => {
     </DropdownMenu>
   );
 };
+
+type UserFilterProps = {
+  selectedRole: UserRole | "all";
+  searchTerm: string;
+};
+
+export function UserList({ selectedRole, searchTerm }: UserFilterProps) {
+  const { currentPage, itemsPerPage, onPageChange, onLimitChange } = usePaginationState(1, 10);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["users"],
+    queryFn: () =>
+      getAllUsers({
+        role: selectedRole !== "all" ? selectedRole : undefined,
+        search: searchTerm,
+        page: currentPage,
+        limit: itemsPerPage,
+      }),
+    select: (data) => ({
+      users: data.data,
+      meta: data.meta as MetaData,
+    }),
+  });
+
+  if (isLoading) return <LoadingState />;
+  if (isError) return <div>Error fetching data</div>;
+  if (!data) return <div>No data found</div>;
+
+  return (
+    <>
+      <UserTable users={data.users || []} currentPage={currentPage} itemsPerPage={itemsPerPage} />
+      <UserPagination
+        currentPage={currentPage}
+        totalItems={data.meta.total}
+        itemsPerPage={itemsPerPage}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onLimitChange}
+      />
+    </>
+  );
+}

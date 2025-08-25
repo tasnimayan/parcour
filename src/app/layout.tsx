@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/components/contexts/auth-context";
 import { Toaster } from "@/components/ui/sonner";
+import Providers from "./providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,9 +18,9 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Parcour - Logistics Management System",
-  description:
-    "Professional courier and parcel management system for logistics companies",
+  description: "Professional courier and parcel management system for logistics companies",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,10 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.style.fontFamily} ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${geistSans.style.fontFamily} ${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Providers>
+          <AuthProvider>{children}</AuthProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>

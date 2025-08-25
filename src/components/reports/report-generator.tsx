@@ -16,8 +16,8 @@ import {
   generateUserReport,
   generateFinancialReport,
 } from "@/lib/export-utils";
-import { getAllParcels } from "@/lib/parcel-data";
-import { getAllUsers } from "@/lib/admin";
+import { mockParcels } from "@/lib/parcel-data";
+import { mockUsers } from "@/lib/users-data";
 
 export function ReportGenerator() {
   const [reportType, setReportType] = useState<string>("");
@@ -35,16 +35,16 @@ export function ReportGenerator() {
 
       switch (reportType) {
         case "parcels":
-          const parcels = getAllParcels();
+          const parcels = mockParcels;
           const dateRange = dateFrom && dateTo ? { from: dateFrom, to: dateTo } : undefined;
           reportData = generateParcelReport(parcels, dateRange);
           break;
         case "users":
-          const users = getAllUsers();
+          const users = mockUsers;
           reportData = generateUserReport(users);
           break;
         case "financial":
-          const allParcels = getAllParcels();
+          const allParcels = mockParcels;
           const financialDateRange = dateFrom && dateTo ? { from: dateFrom, to: dateTo } : undefined;
           reportData = generateFinancialReport(allParcels, financialDateRange);
           break;

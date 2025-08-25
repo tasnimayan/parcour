@@ -1,4 +1,4 @@
-export type ParcelStatus = "pending" | "picked_up" | "in_transit" | "delivered" | "failed";
+export type ParcelStatus = "pending" | "picked_up" | "assigned" | "in_transit" | "delivered" | "failed";
 export type ParcelPriority = "low" | "medium" | "high" | "urgent";
 export type ParcelService = "standard" | "express" | "urgent";
 

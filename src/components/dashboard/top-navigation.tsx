@@ -1,6 +1,6 @@
 "use client";
 
-import { useActivePath } from "@/lib/utils";
+import { useActivePath } from "@/hooks/use-path";
 import { useAuth } from "../contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Package, User, LogOut, Home, History, MapPin, Plus } from "lucide-react";

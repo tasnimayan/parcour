@@ -10,21 +10,28 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Truck } from "lucide-react";
 import { useAuth } from "../contexts/auth-context";
 import Link from "next/link";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login, loading } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      await login(email, password);
+      const res = await login(email, password);
+      if (!res.success) {
+        toast.error(res.message);
+      }
+      return router.push("/admin");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      toast.error(err instanceof Error ? err.message : "Login failed");
     }
   };
 

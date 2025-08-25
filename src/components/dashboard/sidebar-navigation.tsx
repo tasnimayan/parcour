@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/auth-context";
 import { Button } from "@/components/ui/button";
-import { cn, useActivePath } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Package,
   Truck,
@@ -19,8 +19,9 @@ import {
   Clock,
   LucideIcon,
 } from "lucide-react";
-import { User, mockUsers } from "@/lib/auth";
 import Link from "next/link";
+import { AuthUser } from "@/types";
+import { useActivePath } from "@/hooks/use-path";
 
 // Navigation item
 const adminNavItems = [
@@ -56,12 +57,12 @@ function SidebarHeader({ isCollapsed, toggleCollapse }: { isCollapsed: boolean; 
   );
 }
 
-function UserInfo({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
+function UserInfo({ user, isCollapsed }: { user: AuthUser; isCollapsed: boolean }) {
   return (
     <div className="p-4 border-t">
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-full">
-          {user?.role === "admin" ? (
+          {user?.role === "ADMIN" ? (
             <Settings className="w-5 h-5 text-primary" />
           ) : (
             <Truck className="w-5 h-5 text-primary" />
@@ -71,7 +72,7 @@ function UserInfo({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{user?.name}</p>
             <p className="text-sm text-muted-foreground">
-              {user?.role === "admin" ? "Administrator" : "Delivery Agent"}
+              {user?.role === "ADMIN" ? "Administrator" : "Delivery Agent"}
             </p>
           </div>
         )}
@@ -119,7 +120,7 @@ const SidebarNavigation = ({
   onLogout,
 }: {
   navItems: { path: string; label: string; icon: LucideIcon }[];
-  user: User;
+  user: AuthUser;
   onLogout: () => void;
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -150,8 +151,7 @@ const SidebarNavigation = ({
 };
 
 export function AdminSidebarNav() {
-  const { logout } = useAuth();
-  const user = mockUsers.find((user) => user.role === "admin");
+  const { logout, user } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -161,9 +161,7 @@ export function AdminSidebarNav() {
 }
 
 export function AgentSidebarNav() {
-  const { logout } = useAuth();
-  const user = mockUsers.find((user) => user.role === "agent");
-
+  const { logout, user } = useAuth();
   const handleLogout = async () => {
     await logout();
   };

@@ -1,19 +1,15 @@
 import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { UserRole } from "@/types";
+import { USER_STATUS } from "@/lib/constants";
 
 interface UserFiltersProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  selectedRole: string;
-  onRoleChange: (value: string) => void;
+  selectedRole: UserRole | "all";
+  onRoleChange: (value: UserRole | "all") => void;
   selectedStatus: string;
   onStatusChange: (value: string) => void;
 }
@@ -26,10 +22,9 @@ export function UserFilters({
   selectedStatus,
   onStatusChange,
 }: UserFiltersProps) {
-  const activeFilters = [
-    selectedRole !== "all" && selectedRole,
-    selectedStatus !== "all" && selectedStatus,
-  ].filter(Boolean);
+  const activeFilters = [selectedRole !== "all" && selectedRole, selectedStatus !== "all" && selectedStatus].filter(
+    Boolean
+  );
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -50,9 +45,11 @@ export function UserFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Roles</SelectItem>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="agent">Delivery Agent</SelectItem>
-            <SelectItem value="customer">Customer</SelectItem>
+            {["admin", "agent", "customer"].map((role) => (
+              <SelectItem key={role} value={role}>
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -62,9 +59,11 @@ export function UserFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
+            {USER_STATUS.map((status) => (
+              <SelectItem key={status.value} value={status.value}>
+                {status.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

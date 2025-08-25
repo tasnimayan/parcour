@@ -30,3 +30,9 @@ export const PARCEL_STATUS = [
   { value: "delivered", label: "Delivered" },
   { value: "failed", label: "Failed" },
 ];
+
+export const USER_STATUS = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+  { value: "pending", label: "Pending" },
+];

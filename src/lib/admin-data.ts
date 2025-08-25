@@ -1,7 +1,6 @@
 // Admin-specific data management and analytics
-import { mockUsers, type User } from "./auth";
+import { mockUsers } from "./auth-api";
 import { mockParcels } from "./parcel-data";
-import { Parcel } from "@/types/parcel";
 
 export interface SystemMetrics {
   totalUsers: number;
@@ -130,58 +129,8 @@ export const getSystemMetrics = async (): Promise<SystemMetrics> => {
   };
 };
 
-export const getAllUsers = async (): Promise<User[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return [...mockUsers];
-};
-
-export const getAllParcels = async (): Promise<Parcel[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return [...mockParcels];
-};
-
-export const getUnassignedParcels = async (): Promise<Parcel[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return mockParcels.filter((p) => !p.agentId && p.status === "pending");
-};
-
-export const getAvailableAgents = async (): Promise<User[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  return mockUsers.filter((u) => u.role === "agent");
-};
-
 export const getDailyStats = async (): Promise<DailyStats[]> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 400));
   return mockDailyStats;
-};
-
-export const deleteUser = async (userId: string): Promise<void> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  const userIndex = mockUsers.findIndex((u) => u.id === userId);
-  if (userIndex === -1) {
-    throw new Error("User not found");
-  }
-
-  // In a real app, you'd also handle cascading deletes for parcels, etc.
-  mockUsers.splice(userIndex, 1);
-};
-
-export const updateUserRole = async (userId: string, newRole: "admin" | "agent" | "customer"): Promise<User> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
-
-  const userIndex = mockUsers.findIndex((u) => u.id === userId);
-  if (userIndex === -1) {
-    throw new Error("User not found");
-  }
-
-  mockUsers[userIndex] = { ...mockUsers[userIndex], role: newRole };
-  return mockUsers[userIndex];
 };
