@@ -1,5 +1,19 @@
 // Mock authentication system for the courier management platform
 export type UserRole = "admin" | "agent" | "customer";
+type AdminLoginResponse = {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    lastLogin: string;
+    profile: {
+      fullName: string;
+      department: string;
+      permissions: string[];
+    };
+  };
+};
 
 export interface User {
   id: string;
@@ -17,50 +31,30 @@ export interface AuthState {
 }
 
 export type ApiResponse<T> = {
-  status: string;
+  success: boolean;
+  message: string;
   data?: T | null;
   error?: string;
+  [key: string]: unknown;
 };
 
-// Mock user data
-export const mockUsers: User[] = [
-  {
-    id: "1",
-    email: "admin@courier.com",
-    name: "Admin User",
-    role: "admin",
-    phone: "01645800408",
-  },
-  {
-    id: "2",
-    email: "agent@courier.com",
-    name: "John Delivery",
-    role: "agent",
-    phone: "01752100936",
-  },
-  {
-    id: "3",
-    email: "customer@example.com",
-    name: "Jane Customer",
-    role: "customer",
-    phone: "01955907174",
-    address: "Mirpur 1, Dhaka-1210, Bangladesh",
-  },
-];
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// modification: Update These with actual API calls
-const login = async (
-  email: string,
-  password: string
-): Promise<ApiResponse<User>> => {
-  // fetch: post request on login api
-  const user = mockUsers.find((u) => u.email === email);
+// Login API fetch
+const login = async (email: string, password: string): Promise<ApiResponse<AdminLoginResponse>> => {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
 
-  if (!user || password !== "password123") {
+  const data = await res.json();
+  if (!res.ok) {
     throw new Error("Invalid credentials");
   }
-  // store session on cookie
-  return { status: "success", data: user };
+  return data;
 };
 
 // Modification:
@@ -100,4 +94,29 @@ const logout = async (): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
 };
 
+// Mock user data
+export const mockUsers: User[] = [
+  {
+    id: "1",
+    email: "admin@gmail.com",
+    name: "Admin User",
+    role: "admin",
+    phone: "01645800408",
+  },
+  {
+    id: "2",
+    email: "agent@gmail.com",
+    name: "John Delivery",
+    role: "agent",
+    phone: "01752100936",
+  },
+  {
+    id: "3",
+    email: "customer@gmail.com",
+    name: "Jane Customer",
+    role: "customer",
+    phone: "01955907174",
+    address: "Mirpur 1, Dhaka-1210, Bangladesh",
+  },
+];
 export { login, logout, register };

@@ -1,21 +1,17 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Package, Truck } from "lucide-react";
+import { Loader2, Truck } from "lucide-react";
 import { useAuth } from "../contexts/auth-context";
+import Link from "next/link";
 
-interface LoginFormProps {
-  onToggleMode: () => void;
-}
-
-export function LoginForm({ onToggleMode }: LoginFormProps) {
+export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,23 +28,20 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
     }
   };
 
-  const handleDemoLogin = (demoEmail: string) => {
+  const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
-    setPassword("password123");
+    setPassword(demoPassword);
   };
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-lg">
-            <Package className="w-6 h-6 text-primary-foreground" />
-          </div>
           <div className="flex items-center justify-center w-12 h-12 bg-accent rounded-lg">
             <Truck className="w-6 h-6 text-accent-foreground" />
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold">CourierPro</CardTitle>
+        <CardTitle className="text-2xl font-bold">Parcour</CardTitle>
         <CardDescription>Sign in to your logistics dashboard</CardDescription>
       </CardHeader>
       <CardContent>
@@ -94,42 +87,47 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
           </Button>
         </form>
 
-        <div className="mt-6">
-          <div className="text-sm text-muted-foreground text-center mb-3">Demo Accounts (password: password123)</div>
-          <div className="grid gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleDemoLogin("admin@courier.com")}
-              className="text-xs"
-            >
-              Admin Demo
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleDemoLogin("agent@courier.com")}
-              className="text-xs"
-            >
-              Delivery Agent Demo
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleDemoLogin("customer@example.com")}
-              className="text-xs"
-            >
-              Customer Demo
-            </Button>
-          </div>
-        </div>
+        <DemoLoginDataPopulate handleDemoLogin={handleDemoLogin} />
 
         <div className="mt-6 text-center">
-          <Button variant="link" onClick={onToggleMode} className="text-sm">
+          <Link href="/register" className="text-sm hover:underline">
             {"Don't have an account? Sign up"}
-          </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
   );
 }
+
+const DemoLoginDataPopulate = ({ handleDemoLogin }: { handleDemoLogin: (email: string, password: string) => void }) => {
+  return (
+    <div className="mt-6">
+      <div className="grid gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleDemoLogin("admin@gmail.com", "@Testadmin121")}
+          className="text-xs"
+        >
+          Admin Demo
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleDemoLogin("agent@gmail.com", "@Testagent121")}
+          className="text-xs"
+        >
+          Delivery Agent Demo
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handleDemoLogin("customer@gmail.com", "@Testcustomer121")}
+          className="text-xs"
+        >
+          Customer Demo
+        </Button>
+      </div>
+    </div>
+  );
+};

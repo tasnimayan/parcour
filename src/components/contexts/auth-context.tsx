@@ -11,6 +11,8 @@ import {
   type UserRole,
 } from "../../lib/auth";
 
+import Cookies from "js-cookie";
+
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (
@@ -40,10 +42,7 @@ interface AuthReducerState extends AuthState {
   loading: boolean;
 }
 
-const authReducer = (
-  state: AuthReducerState,
-  action: AuthAction
-): AuthReducerState => {
+const authReducer = (state: AuthReducerState, action: AuthAction): AuthReducerState => {
   switch (action.type) {
     case "LOGIN_START":
     case "REGISTER_START":
@@ -82,24 +81,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check for stored user on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("parcour-user");
-    if (storedUser) {
+    const sessionToken = Cookies.get("parcour_user");
+    if (sessionToken) {
       try {
-        const user = JSON.parse(storedUser);
+        // GET USER FROM auth/session route
+        const user = JSON.parse(sessionToken);
         dispatch({ type: "LOGIN_SUCCESS", payload: user });
       } catch (error) {
         console.log("Auth provider error:", error);
-        localStorage.removeItem("parcour-user");
+        Cookies.remove("parcour_user");
       }
     }
   }, []);
 
+  // Partially complete - need validation
   const login = async (email: string, password: string) => {
     dispatch({ type: "LOGIN_START" });
     try {
       const res = await authLogin(email, password);
-      localStorage.setItem("parcour-user", JSON.stringify(res.data));
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data! });
+
+      if (!res.data) {
+        throw new Error("Invalid credentials");
+      }
+      Cookies.set("parcour_user", JSON.stringify(res.data?.token));
+
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          id: res.data?.user.id,
+          email: res.data?.user.email,
+          name: res.data?.user.profile.fullName,
+          role: res.data?.user.role as UserRole,
+        },
+      });
     } catch (error) {
       dispatch({ type: "LOGIN_ERROR" });
       throw error;
@@ -116,14 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   ) => {
     dispatch({ type: "REGISTER_START" });
     try {
-      const user = await authRegister(
-        email,
-        password,
-        name,
-        role,
-        phone,
-        address
-      );
+      const user = await authRegister(email, password, name, role, phone, address);
       localStorage.setItem("parcour-user", JSON.stringify(user.data));
       dispatch({ type: "REGISTER_SUCCESS", payload: user.data! });
     } catch (error) {
