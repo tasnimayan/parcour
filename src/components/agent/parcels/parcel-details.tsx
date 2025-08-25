@@ -13,35 +13,39 @@ import { toast } from "sonner";
 import { StatusBadge } from "./status-badge";
 import { useParams } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
+import ParcelQRCode from "./parcel-qr-code";
+import { PARCEL_STATUS } from "@/lib/constants";
 
 // Mock data - in real app this would come from an API
 const mockParcel: Parcel = {
   id: "1",
-  trackingNumber: "TRK001234",
+  trackingCode: "TRK-2024-123456",
+  customerId: "1",
   recipientName: "John Smith",
   recipientPhone: "+1 (555) 123-4567",
   pickupAddress: "123 Business Ave, Downtown, City 12345",
   deliveryAddress: "456 Elm Street, Residential Area, City 67890",
-  status: "In Transit" as ParcelStatus,
+  status: "picked_up" as ParcelStatus,
   priority: "urgent",
   service: "express",
-  weight: 2.5,
-  dimensions: "30x20x15 cm",
+  parcelType: "",
+  parcelWeight: 2.5,
+  parcelSize: "30x20x15 cm",
   notes: "Fragile - Handle with care. Ring doorbell twice.",
-  estimatedDelivery: new Date("2024-01-15T14:00:00"),
-  createdAt: new Date("2024-01-14T09:00:00"),
-  pickupDate: new Date("2024-01-15T10:30:00"),
+  estimatedDelivery: "2024-01-15T14:00:00",
+  createdAt: "2024-01-14T09:00:00",
+  pickedAt: "2024-01-15T10:30:00",
 };
 
 const ParcelDetails = () => {
   const { id } = useParams();
   const [parcel, setParcel] = useState<Parcel>(mockParcel);
-  const [newStatus, setNewStatus] = useState<ParcelStatus>(parcel.status);
+  const [status, setStatus] = useState<ParcelStatus>(parcel.status);
   const [deliveryNotes, setDeliveryNotes] = useState("");
 
   console.log(id);
   const handleStatusUpdate = () => {
-    setParcel((prev) => ({ ...prev, status: newStatus }));
+    setParcel((prev) => ({ ...prev, status: status }));
     toast("Status Updated");
   };
 
@@ -61,7 +65,7 @@ const ParcelDetails = () => {
       <PageHeader
         title={
           <>
-            <Package className="h-8 w-8 text-primary" /> {parcel.trackingNumber}
+            <Package className="h-8 w-8 text-primary" /> {parcel.trackingCode}
           </>
         }
         subtitle="Parcel Details & Status Management"
@@ -130,14 +134,14 @@ const ParcelDetails = () => {
                 <Weight className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="text-sm text-muted-foreground">Weight</p>
-                  <p className="font-semibold text-foreground">{parcel.weight} kg</p>
+                  <p className="font-semibold text-foreground">{parcel.parcelWeight} kg</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
                 <Ruler className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="text-sm text-muted-foreground">Dimensions</p>
-                  <p className="font-semibold text-foreground">{parcel.dimensions}</p>
+                  <p className="font-semibold text-foreground">{parcel.parcelSize}</p>
                 </div>
               </div>
             </CardContent>
@@ -163,8 +167,7 @@ const ParcelDetails = () => {
 
         {/* Status Management Sidebar */}
         <div className="space-y-6">
-          {/* Status Update */}
-          <Card className="gradient-card">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Clock className="h-5 w-5 text-primary" />
@@ -172,23 +175,25 @@ const ParcelDetails = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Current Status</label>
-                <StatusBadge status={parcel.status} className="w-full justify-center" />
+              <ParcelQRCode trackingNumber={parcel.trackingCode} />
+
+              <div className="space-x-2">
+                <label className="text-sm font-medium mb-2">Current Status</label>
+                <StatusBadge status={parcel.status} />
               </div>
 
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">New Status</label>
-                <Select value={newStatus} onValueChange={(value) => setNewStatus(value as ParcelStatus)}>
+                <Select value={status} onValueChange={(value) => setStatus(value as ParcelStatus)}>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Picked Up">Picked Up</SelectItem>
-                    <SelectItem value="In Transit">In Transit</SelectItem>
-                    <SelectItem value="Delivered">Delivered</SelectItem>
-                    <SelectItem value="Failed">Failed</SelectItem>
+                    {PARCEL_STATUS.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -205,7 +210,7 @@ const ParcelDetails = () => {
                 />
               </div>
 
-              <Button onClick={handleStatusUpdate} className="w-full" disabled={newStatus === parcel.status}>
+              <Button onClick={handleStatusUpdate} className="w-full" disabled={status === parcel.status}>
                 <Save className="h-4 w-4 mr-2" />
                 Update Status
               </Button>
@@ -226,12 +231,12 @@ const ParcelDetails = () => {
                 </div>
               </div>
 
-              {parcel.pickupDate && (
+              {parcel.pickedAt && (
                 <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 rounded-full bg-status-picked mt-2"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Picked Up</p>
-                    <p className="text-xs text-muted-foreground">{format(parcel.pickupDate, "MMM dd, HH:mm")}</p>
+                    <p className="text-xs text-muted-foreground">{format(parcel.pickedAt, "MMM dd, HH:mm")}</p>
                   </div>
                 </div>
               )}
@@ -240,7 +245,9 @@ const ParcelDetails = () => {
                 <div className="w-2 h-2 rounded-full bg-status-transit mt-2"></div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Estimated Delivery</p>
-                  <p className="text-xs text-muted-foreground">{format(parcel.estimatedDelivery, "MMM dd, HH:mm")}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {parcel.deliveryDate && format(parcel.deliveryDate, "MMM dd, HH:mm")}
+                  </p>
                 </div>
               </div>
             </CardContent>

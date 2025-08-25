@@ -21,3 +21,12 @@ export const SERVICE_OPTIONS = [
   { value: "express", label: "Express" },
   { value: "urgent", label: "Urgent" },
 ];
+
+export const PARCEL_STATUS = [
+  { value: "pending", label: "Pending" },
+  { value: "assigned", label: "Assigned" },
+  { value: "picked_up", label: "Picked Up" },
+  { value: "in_transit", label: "In Transit" },
+  { value: "delivered", label: "Delivered" },
+  { value: "failed", label: "Failed" },
+];

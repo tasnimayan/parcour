@@ -4,7 +4,8 @@ export type ParcelService = "standard" | "express" | "urgent";
 
 export interface Parcel {
   id: string;
-  trackingNumber: string;
+  customerId: string;
+  trackingCode: string;
   recipientName: string;
   recipientPhone: string;
   pickupAddress: string;
@@ -12,13 +13,17 @@ export interface Parcel {
   status: ParcelStatus;
   service: ParcelService;
   priority: ParcelPriority;
-  weight: number;
-  dimensions: string;
+  parcelType: string;
+  parcelWeight: number;
+  parcelSize: string;
   notes?: string;
-  pickupDate?: Date;
-  deliveryDate?: Date;
-  estimatedDelivery: Date;
-  createdAt: Date;
+  pickedAt?: Date | string;
+  paymentType?: string;
+  codAmount?: number;
+  deliveryDate?: Date | string;
+  deliveredAt?: Date | string;
+  estimatedDelivery?: Date | string;
+  createdAt: Date | string;
 }
 
 export interface DeliveryStats {

@@ -1,6 +1,6 @@
 // Mock data and types for parcel management
 export type ParcelSize = "small" | "medium" | "large" | "extra-large";
-export type ParcelStatus = "pending" | "picked-up" | "in-transit" | "out-for-delivery" | "delivered" | "failed";
+export type ParcelStatus = "pending" | "assigned" | "picked_up" | "in_transit" | "delivered" | "failed";
 export type PaymentType = "cod" | "prepaid";
 
 export interface Address {
@@ -13,12 +13,12 @@ export interface Address {
 
 export interface Parcel {
   id: string;
-  trackingNumber: string;
+  trackingCode: string;
   customerId: string;
   pickupAddress: Address;
   deliveryAddress: Address;
-  size: ParcelSize;
-  weight: number;
+  parcelSize: ParcelSize;
+  parcelWeight: number;
   description: string;
   paymentType: PaymentType;
   codAmount?: number;
@@ -34,7 +34,7 @@ export interface Parcel {
 export const mockParcels: Parcel[] = [
   {
     id: "1",
-    trackingNumber: "CP2024001",
+    trackingCode: "CP2024001",
     customerId: "3",
     pickupAddress: {
       street: "123 Main St",
@@ -50,11 +50,11 @@ export const mockParcels: Parcel[] = [
       zipCode: "11201",
       country: "USA",
     },
-    size: "medium",
-    weight: 2.5,
+    parcelSize: "medium",
+    parcelWeight: 2.5,
     description: "Electronics - Laptop",
     paymentType: "prepaid",
-    status: "in-transit",
+    status: "in_transit",
     createdAt: "2024-01-15T10:30:00Z",
     estimatedDelivery: "2024-01-17T16:00:00Z",
     agentId: "2",
@@ -62,7 +62,7 @@ export const mockParcels: Parcel[] = [
   },
   {
     id: "2",
-    trackingNumber: "CP2024002",
+    trackingCode: "CP2024002",
     customerId: "3",
     pickupAddress: {
       street: "789 Pine St",
@@ -78,8 +78,8 @@ export const mockParcels: Parcel[] = [
       zipCode: "10001",
       country: "USA",
     },
-    size: "small",
-    weight: 0.8,
+    parcelSize: "small",
+    parcelWeight: 0.8,
     description: "Documents",
     paymentType: "cod",
     codAmount: 50,
@@ -92,7 +92,7 @@ export const mockParcels: Parcel[] = [
   },
   {
     id: "3",
-    trackingNumber: "CP2024003",
+    trackingCode: "CP2024003",
     customerId: "3",
     pickupAddress: {
       street: "321 Elm St",
@@ -108,8 +108,8 @@ export const mockParcels: Parcel[] = [
       zipCode: "10451",
       country: "USA",
     },
-    size: "large",
-    weight: 5.2,
+    parcelSize: "large",
+    parcelWeight: 5.2,
     description: "Home Appliance - Microwave",
     paymentType: "prepaid",
     status: "pending",
@@ -128,7 +128,7 @@ export const createParcel = async (
   const newParcel: Parcel = {
     ...parcelData,
     id: Date.now().toString(),
-    trackingNumber: `CP${Date.now()}`,
+    trackingCode: `CP${Date.now()}`,
     status: "pending",
     createdAt: new Date().toISOString(),
   };
@@ -148,7 +148,7 @@ export const getParcelByTrackingNumber = async (trackingNumber: string): Promise
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  return mockParcels.find((parcel) => parcel.trackingNumber === trackingNumber) || null;
+  return mockParcels.find((parcel) => parcel.trackingCode === trackingNumber) || null;
 };
 
 export const getParcelSizePrice = (size: ParcelSize): number => {
@@ -163,10 +163,10 @@ export const getParcelSizePrice = (size: ParcelSize): number => {
 
 export const getStatusColor = (status: ParcelStatus): string => {
   const colors = {
-    pending: "text-yellow-600 bg-yellow-50",
-    "picked-up": "text-blue-600 bg-blue-50",
-    "in-transit": "text-purple-600 bg-purple-50",
-    "out-for-delivery": "text-orange-600 bg-orange-50",
+    pending: "text-orange-600 bg-orange-50",
+    assigned: "text-yellow-600 bg-yellow-50",
+    picked_up: "text-blue-600 bg-blue-50",
+    in_transit: "text-purple-600 bg-purple-50",
     delivered: "text-green-600 bg-green-50",
     failed: "text-red-600 bg-red-50",
   };
@@ -266,7 +266,7 @@ export const getOptimizedRoute = async (agentId: string): Promise<RouteStop[]> =
 
   // Add delivery stops for picked up parcels
   agentParcels
-    .filter((p) => p.status === "picked-up" || p.status === "in-transit" || p.status === "out-for-delivery")
+    .filter((p) => p.status === "picked_up" || p.status === "in_transit" || p.status === "pending")
     .forEach((parcel) => {
       stops.push({
         id: `delivery-${parcel.id}`,

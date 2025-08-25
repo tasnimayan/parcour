@@ -34,7 +34,7 @@ const ParcelCard = ({ parcel, onClick }: ParcelCardProps) => {
           <div className="flex items-center space-x-2">
             <Package className="h-5 w-5 text-primary" />
             <div>
-              <h3 className="font-semibold text-foreground">{parcel.trackingNumber}</h3>
+              <h3 className="font-semibold text-foreground">{parcel.trackingCode}</h3>
               <p className="text-sm text-muted-foreground">{parcel.recipientName}</p>
             </div>
           </div>
@@ -54,7 +54,9 @@ const ParcelCard = ({ parcel, onClick }: ParcelCardProps) => {
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-1">
             <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{format(parcel.estimatedDelivery, "MMM dd, HH:mm")}</span>
+            <span className="text-muted-foreground">
+              {parcel.estimatedDelivery && format(parcel.estimatedDelivery, "MMM dd, HH:mm")}
+            </span>
           </div>
           <span className={`font-medium ${getPriorityColor(parcel.priority)}`}>{parcel.priority}</span>
         </div>

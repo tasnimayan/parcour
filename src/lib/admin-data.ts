@@ -1,6 +1,7 @@
 // Admin-specific data management and analytics
 import { mockUsers, type User } from "./auth";
-import { mockParcels, type Parcel } from "./parcel-data";
+import { mockParcels } from "./parcel-data";
+import { Parcel } from "@/types/parcel";
 
 export interface SystemMetrics {
   totalUsers: number;
@@ -90,30 +91,19 @@ export const getSystemMetrics = async (): Promise<SystemMetrics> => {
 
   // Calculate today's bookings (mock)
   const today = new Date().toISOString().split("T")[0];
-  const dailyBookings =
-    mockParcels.filter((p) => p.createdAt.startsWith(today)).length || 8;
+  const dailyBookings = mockParcels.filter((p) => p.createdAt.startsWith(today)).length || 8;
 
-  const pendingParcels = mockParcels.filter(
-    (p) => p.status === "pending"
-  ).length;
+  const pendingParcels = mockParcels.filter((p) => p.status === "pending").length;
   const inTransitParcels = mockParcels.filter((p) =>
     ["picked-up", "in-transit", "out-for-delivery"].includes(p.status)
   ).length;
-  const deliveredParcels = mockParcels.filter(
-    (p) => p.status === "delivered"
-  ).length;
+  const deliveredParcels = mockParcels.filter((p) => p.status === "delivered").length;
   const failedParcels = mockParcels.filter((p) => p.status === "failed").length;
 
   // Calculate revenue (mock calculation)
   const totalRevenue = mockParcels.reduce((sum, p) => {
     const basePrice =
-      p.size === "small"
-        ? 10
-        : p.size === "medium"
-        ? 20
-        : p.size === "large"
-        ? 35
-        : 50;
+      p.parcelSize === "small" ? 10 : p.parcelSize === "medium" ? 20 : p.parcelSize === "large" ? 35 : 50;
     return sum + basePrice;
   }, 0);
 
@@ -183,10 +173,7 @@ export const deleteUser = async (userId: string): Promise<void> => {
   mockUsers.splice(userIndex, 1);
 };
 
-export const updateUserRole = async (
-  userId: string,
-  newRole: "admin" | "agent" | "customer"
-): Promise<User> => {
+export const updateUserRole = async (userId: string, newRole: "admin" | "agent" | "customer"): Promise<User> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 500));
 
