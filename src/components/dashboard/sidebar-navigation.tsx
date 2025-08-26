@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { AuthUser } from "@/types";
 import { useActivePath } from "@/hooks/use-path";
+import { useRouter } from "next/navigation";
 
 // Navigation item
 const adminNavItems = [
@@ -62,7 +63,7 @@ function UserInfo({ user, isCollapsed }: { user: AuthUser; isCollapsed: boolean 
     <div className="p-4 border-t">
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-full">
-          {user?.role === "ADMIN" ? (
+          {user?.role === "admin" ? (
             <Settings className="w-5 h-5 text-primary" />
           ) : (
             <Truck className="w-5 h-5 text-primary" />
@@ -72,7 +73,7 @@ function UserInfo({ user, isCollapsed }: { user: AuthUser; isCollapsed: boolean 
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{user?.name}</p>
             <p className="text-sm text-muted-foreground">
-              {user?.role === "ADMIN" ? "Administrator" : "Delivery Agent"}
+              {user?.role === "admin" ? "Administrator" : "Delivery Agent"}
             </p>
           </div>
         )}
@@ -114,17 +115,16 @@ function NavigationList({
   );
 }
 
-const SidebarNavigation = ({
-  navItems,
-  user,
-  onLogout,
-}: {
-  navItems: { path: string; label: string; icon: LucideIcon }[];
-  user: AuthUser;
-  onLogout: () => void;
-}) => {
+const SidebarNavigation = ({ navItems }: { navItems: { path: string; label: string; icon: LucideIcon }[] }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { logout, user } = useAuth();
 
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
   return (
     <div
       className={cn(
@@ -134,13 +134,13 @@ const SidebarNavigation = ({
     >
       <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={() => setIsCollapsed((c) => !c)} />
       <NavigationList items={navItems} isCollapsed={isCollapsed} />
-      <UserInfo user={user} isCollapsed={isCollapsed} />
+      <UserInfo user={user!} isCollapsed={isCollapsed} />
 
       <div className="p-4 border-t">
         <Button
           variant="outline"
           className={cn("w-full justify-start gap-3", isCollapsed && "px-2")}
-          onClick={onLogout}
+          onClick={handleLogout}
         >
           <LogOut className="w-4 h-4" />
           {!isCollapsed && <span>Logout</span>}
@@ -151,20 +151,9 @@ const SidebarNavigation = ({
 };
 
 export function AdminSidebarNav() {
-  const { logout, user } = useAuth();
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  return <SidebarNavigation navItems={adminNavItems} user={user!} onLogout={handleLogout} />;
+  return <SidebarNavigation navItems={adminNavItems} />;
 }
 
 export function AgentSidebarNav() {
-  const { logout, user } = useAuth();
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  return <SidebarNavigation navItems={agentNavItems} user={user!} onLogout={handleLogout} />;
+  return <SidebarNavigation navItems={agentNavItems} />;
 }

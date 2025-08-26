@@ -5,13 +5,16 @@ import { useAuth } from "../contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import { Package, User, LogOut, Home, History, MapPin, Plus } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function TopNavigation() {
   const { user, logout } = useAuth();
   const { isActive } = useActivePath();
+  const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
+    router.push("/");
   };
 
   const navigationItems = [
@@ -55,9 +58,10 @@ export function TopNavigation() {
         {/* User Info & Logout */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm">
-            <User className="w-4 h-4" />
+            <span className="border rounded-full p-1">
+              <User className="w-4 h-4" />
+            </span>
             <span className="font-medium">{user?.name}</span>
-            <span className="text-muted-foreground">(Customer)</span>
           </div>
           <Button variant="outline" size="sm" onClick={handleLogout}>
             <LogOut className="w-4 h-4 mr-2" />

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/contexts/auth-context";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
+import "leaflet/dist/leaflet.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

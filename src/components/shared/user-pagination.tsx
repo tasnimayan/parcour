@@ -1,13 +1,7 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface UserPaginationProps {
   currentPage: number;
@@ -52,10 +46,7 @@ export function UserPagination({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-card border rounded-lg p-4">
       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
         <span>Show</span>
-        <Select
-          value={itemsPerPage.toString()}
-          onValueChange={(value) => onItemsPerPageChange(Number(value))}
-        >
+        <Select value={itemsPerPage.toString()} onValueChange={(value) => onItemsPerPageChange(Number(value))}>
           <SelectTrigger className="w-16 h-8">
             <SelectValue />
           </SelectTrigger>
@@ -74,12 +65,7 @@ export function UserPagination({
       </div>
 
       <div className="flex items-center space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={!canGoPrevious}
-        >
+        <Button variant="outline" size="sm" onClick={() => onPageChange(currentPage - 1)} disabled={!canGoPrevious}>
           <ChevronLeft className="h-4 w-4" />
           Previous
         </Button>
@@ -98,12 +84,7 @@ export function UserPagination({
           ))}
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={!canGoNext}
-        >
+        <Button variant="outline" size="sm" onClick={() => onPageChange(currentPage + 1)} disabled={!canGoNext}>
           Next
           <ChevronRight className="h-4 w-4" />
         </Button>

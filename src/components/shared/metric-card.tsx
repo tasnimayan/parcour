@@ -1,12 +1,12 @@
-import { Card, CardContent } from "@/components/ui/card"
-import type { LucideIcon } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card";
+import type { LucideIcon } from "lucide-react";
 
 interface MetricCardProps {
-  icon: LucideIcon
-  value: string | number
-  label: string
-  iconColor?: string
-  bgColor?: string
+  icon: LucideIcon;
+  value: string | number;
+  label: string;
+  iconColor?: string;
+  bgColor?: string;
 }
 
 export function MetricCard({
@@ -30,5 +30,5 @@ export function MetricCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

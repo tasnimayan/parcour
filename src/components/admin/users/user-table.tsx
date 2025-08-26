@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MetaData, UserData, getAllUsers } from "@/lib/admin-api";
 import { useQuery } from "@tanstack/react-query";
 import { UserRole, UserStatus } from "@/types";
-import { LoadingState } from "@/components/shared/loading-state";
+import { LoadingState } from "@/components/shared/data-states";
 import { UserPagination } from "@/components/shared/user-pagination";
 import { usePaginationState } from "@/hooks/use-pagination";
 

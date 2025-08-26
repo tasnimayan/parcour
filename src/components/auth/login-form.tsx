@@ -11,7 +11,7 @@ import { Loader2, Truck } from "lucide-react";
 import { useAuth } from "../contexts/auth-context";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ export function LoginForm() {
       if (!res.success) {
         toast.error(res.message);
       }
-      return router.push("/admin");
+      return router.push(`/${res.role}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed");
     }
@@ -107,33 +107,50 @@ export function LoginForm() {
 }
 
 const DemoLoginDataPopulate = ({ handleDemoLogin }: { handleDemoLogin: (email: string, password: string) => void }) => {
+  const path = usePathname();
+
+  const Component = () => {
+    switch (path) {
+      case "/login/admin":
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleDemoLogin("admin@gmail.com", "@Testadmin121")}
+            className="text-xs"
+          >
+            Admin Demo
+          </Button>
+        );
+      case "/login/agent":
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleDemoLogin("agent@gmail.com", "@Testagent121")}
+            className="text-xs"
+          >
+            Delivery Agent Demo
+          </Button>
+        );
+      case "/login":
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleDemoLogin("customer@gmail.com", "@Testcustomer121")}
+            className="text-xs"
+          >
+            Customer Demo
+          </Button>
+        );
+    }
+  };
+
   return (
     <div className="mt-6">
       <div className="grid gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDemoLogin("admin@gmail.com", "@Testadmin121")}
-          className="text-xs"
-        >
-          Admin Demo
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDemoLogin("agent@gmail.com", "@Testagent121")}
-          className="text-xs"
-        >
-          Delivery Agent Demo
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDemoLogin("customer@gmail.com", "@Testcustomer121")}
-          className="text-xs"
-        >
-          Customer Demo
-        </Button>
+        <Component />
       </div>
     </div>
   );

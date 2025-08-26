@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Agent } from "@/lib/mock-parcels";
 import { toast } from "sonner";
 import { SearchInput } from "@/components/shared/search-input";
 import { cn } from "@/lib/utils";
@@ -10,7 +9,7 @@ import { Search } from "lucide-react";
 import { usePaginationState } from "@/hooks/use-pagination";
 import { useQuery } from "@tanstack/react-query";
 import { AgentData, MetaData, getAllAgents } from "@/lib/admin-api";
-import { LoadingState } from "@/components/shared/loading-state";
+import { LoadingState } from "@/components/shared/data-states";
 
 const AgentCard = ({ agent, isSelected }: { agent: AgentData; isSelected?: boolean }) => {
   return (
@@ -45,7 +44,7 @@ interface AgentAssignmentDialogProps {
 export const AgentAssignmentDialog = ({ isOpen, onClose, parcels, onAssignAgent }: AgentAssignmentDialogProps) => {
   const [selectedAgentId, setSelectedAgentId] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
-  const { currentPage, itemsPerPage, onPageChange, onLimitChange } = usePaginationState(1, 20);
+  const { currentPage, itemsPerPage } = usePaginationState(1, 20);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users"],

@@ -4,7 +4,6 @@ import { MoreVertical, User, MapPin, Clock, Package, DollarSign, Eye } from "luc
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -16,6 +15,8 @@ import {
 import { AgentAssignmentDialog } from "./agent-assign-modal";
 import Link from "next/link";
 import { ParcelData } from "@/lib/admin-api";
+import { format } from "date-fns";
+import { EmptyState } from "@/components/shared/data-states";
 
 interface ParcelTableProps {
   parcels: ParcelData[];
@@ -45,26 +46,17 @@ export const ParcelTable = ({ parcels }: ParcelTableProps) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  if (!parcels.length)
+  if (!parcels || parcels.length === 0)
     return (
-      <div className="text-center py-12 text-muted-foreground">
-        <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-        <p className="text-lg font-medium">No parcels found</p>
-        <p className="text-sm">Try adjusting your search criteria</p>
-      </div>
+      <EmptyState
+        icon={<Package className="h-12 w-12 mx-auto mb-4 opacity-50" />}
+        title="No parcels found"
+        description="Try adjusting your filter"
+      />
     );
 
   return (
-    <div>
+    <>
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50">
@@ -76,12 +68,11 @@ export const ParcelTable = ({ parcels }: ParcelTableProps) => {
                 className={isIndeterminate ? "data-[state=checked]:bg-primary" : ""}
               />
             </TableHead>
-            <TableHead className="w-32">Tracking #</TableHead>
+            <TableHead className="w-40">Tracking #</TableHead>
             <TableHead>Sender & Recipient</TableHead>
             <TableHead className="w-32">Service</TableHead>
             <TableHead className="w-24">Status</TableHead>
             <TableHead className="w-24">Priority</TableHead>
-            <TableHead>Assigned Agent</TableHead>
             <TableHead className="w-28">Value</TableHead>
             <TableHead className="w-32">Est. Delivery</TableHead>
             <TableHead className="w-20">Actions</TableHead>
@@ -138,28 +129,6 @@ export const ParcelTable = ({ parcels }: ParcelTableProps) => {
                 </TableCell>
 
                 <TableCell>
-                  {parcel.assignment?.agentId ? (
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-6 w-6">
-                        {/* <AvatarImage src={parcel.assignment.agentId.avatar} alt={parcel.assignment} /> */}
-                        <AvatarFallback className="text-xs">
-                          {parcel.assignment.agent.fullName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm truncate max-w-24">{parcel.assignment.agent.fullName}</span>
-                    </div>
-                  ) : (
-                    <Button variant="outline" size="sm" className="gap-1 h-7" onClick={() => console.log(parcel.id)}>
-                      <User className="h-3 w-3" />
-                      Assign
-                    </Button>
-                  )}
-                </TableCell>
-
-                <TableCell>
                   <div className="flex items-center gap-1">
                     <DollarSign className="h-3 w-3 text-muted-foreground" />
                     <span className="text-sm font-medium">{parcel.codAmount}</span>
@@ -169,7 +138,7 @@ export const ParcelTable = ({ parcels }: ParcelTableProps) => {
                 <TableCell>
                   <div className="flex items-center gap-1 text-sm">
                     <Clock className="h-3 w-3 text-muted-foreground" />
-                    <span>{formatDate(parcel.createdAt)}</span>
+                    <span>{parcel.createdAt && format(parcel.createdAt, "dd MMM")}</span>
                   </div>
                 </TableCell>
 
@@ -192,7 +161,7 @@ export const ParcelTable = ({ parcels }: ParcelTableProps) => {
         parcels={selectedParcels}
         onAssignAgent={(parcelIds, agentId) => console.log(parcelIds, agentId)}
       />
-    </div>
+    </>
   );
 };
 

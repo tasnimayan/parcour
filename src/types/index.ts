@@ -1,4 +1,4 @@
-export type UserRole = "ADMIN" | "AGENT" | "CUSTOMER";
+export type UserRole = "admin" | "agent" | "customer";
 export type UserStatus = "active" | "inactive" | "pending";
 
 export interface AuthUser {

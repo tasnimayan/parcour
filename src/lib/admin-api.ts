@@ -16,20 +16,27 @@ export type UserData = {
 
 export type ParcelData = {
   id: string;
-  trackingCode: string;
   customerId: string;
+  trackingCode: string;
   pickupAddress: string;
-  pickupLat: number;
-  pickupLng: number;
+  pickupLat: number | null;
+  pickupLng: number | null;
   deliveryAddress: string;
-  deliveryLat: number;
-  deliveryLng: number;
-  parcelType: string;
+  deliveryLat: number | null;
+  deliveryLng: number | null;
+  recipientName: string;
+  recipientPhone: string;
   parcelSize: string;
   parcelWeight: number;
+  parcelType: string;
+  priorityType: ParcelPriority;
+  serviceType: ParcelService;
   paymentType: string;
   codAmount: number;
   status: ParcelStatus;
+  note?: string | null;
+  estimatedDeliveryDate?: string | null;
+  deliveredAt?: string | null;
   createdAt: string;
   updatedAt: string;
   customer: {
@@ -104,7 +111,7 @@ type ParcelFilters = {
   limit?: number;
 };
 
-export const getAllParcels = async ({
+export const fetchAllParcels = async ({
   search,
   status,
   priority,
@@ -157,6 +164,7 @@ type AdminStatsData = {
   deliveredParcels: number;
   failedParcels: number;
 };
+
 export const getStatsCounts = async (): Promise<ApiResponse<AdminStatsData>> => {
   const res = await fetch(`${API_URL}/admin/stats/counts`, {
     headers: {

@@ -2,7 +2,7 @@ import { SelectService, SelectStatus } from "../../shared/filter-options";
 import { SearchInput } from "../../shared/search-input";
 import { ParcelService, ParcelStatus } from "@/types/parcel";
 import { Button } from "../../ui/button";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, SortAsc } from "lucide-react";
 
 interface ParcelFilterProps {
   searchTerm: string;
@@ -34,6 +34,10 @@ export const ParcelFilter = ({
 
       <SelectStatus value={statusFilter} onChange={onStatusChange} />
       <SelectService value={serviceFilter} onChange={onServiceChange} />
+      <Button variant="outline" size="sm">
+        <SortAsc className="h-4 w-4 mr-2" />
+        Sort by Date
+      </Button>
       {isFilterActive && (
         <Button variant="ghost" size="sm" onClick={onReset} className="gap-2">
           <RotateCcw className="h-4 w-4" />

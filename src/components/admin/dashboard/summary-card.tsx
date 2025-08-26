@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function SummaryCard() {
+export const SummaryCard = () => {
   const metrics = {
     deliveredParcels: 10,
     totalParcels: 20,
@@ -89,4 +89,4 @@ export default function SummaryCard() {
       </Card>
     </div>
   );
-}
+};

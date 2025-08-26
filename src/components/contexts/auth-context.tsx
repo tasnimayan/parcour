@@ -15,7 +15,7 @@ export interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; message: string; role?: string }>;
   // Modification: set conditional payload type depending on role
   register: (
     role: UserRole,
@@ -88,6 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               payload: { id: user.id, email: user.email, name: user.fullName, role: user.role },
             });
           }
+          return;
         } catch (error) {
           console.log("Auth provider error:", error);
           Cookies.remove("parcour_auth");
@@ -118,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: res.data.user.role,
         },
       });
-      return { success: true, message: "Login successful" };
+      return { success: true, message: "Login successful", role: res.data.user.role };
     } catch (e) {
       dispatch({ type: "AUTH_ERROR", payload: (e as Error).message });
       return { success: false, message: (e as Error).message };

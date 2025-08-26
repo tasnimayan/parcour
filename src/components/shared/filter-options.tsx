@@ -3,12 +3,12 @@ import { AlignEndVertical, Filter, SortAsc } from "lucide-react";
 import { ParcelStatus, ParcelPriority, ParcelService } from "@/types/parcel";
 import { STATUS_OPTIONS, PRIORITY_OPTIONS, SERVICE_OPTIONS } from "@/lib/constants";
 
-interface SelectStatusProps<T> {
+interface SelectProps<T> {
   value: T | "all";
   onChange: (value: T | "all") => void;
 }
 
-export const SelectStatus = ({ value, onChange }: SelectStatusProps<ParcelStatus>) => {
+export const SelectStatus = ({ value, onChange }: SelectProps<ParcelStatus>) => {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full sm:w-48">
@@ -26,7 +26,7 @@ export const SelectStatus = ({ value, onChange }: SelectStatusProps<ParcelStatus
   );
 };
 
-export const SelectPriority = ({ value, onChange }: SelectStatusProps<ParcelPriority>) => {
+export const SelectPriority = ({ value, onChange }: SelectProps<ParcelPriority>) => {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full sm:w-48">
@@ -44,7 +44,7 @@ export const SelectPriority = ({ value, onChange }: SelectStatusProps<ParcelPrio
   );
 };
 
-export const SelectService = ({ value, onChange }: SelectStatusProps<ParcelService>) => {
+export const SelectService = ({ value, onChange }: SelectProps<ParcelService>) => {
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full sm:w-48">

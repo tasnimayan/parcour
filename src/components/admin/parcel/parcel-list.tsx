@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+"use client";
 import { ParcelTable } from "./parcel-table";
-import { MetaData, getAllParcels } from "@/lib/admin-api";
 import { ParcelPriority, ParcelService, ParcelStatus } from "@/types/parcel";
-import { LoadingState } from "@/components/shared/loading-state";
+import { LoadingState } from "@/components/shared/data-states";
 import { usePaginationState } from "@/hooks/use-pagination";
 import { UserPagination } from "@/components/shared/user-pagination";
+import { useParcels } from "@/hooks/use-parcels";
+import { ErrorState } from "@/components/shared/data-states";
 
 type ParcelListProps = {
   searchTerm: string;
@@ -16,33 +17,24 @@ type ParcelListProps = {
 export const ParcelList = ({ searchTerm, status, priority, service }: ParcelListProps) => {
   const { currentPage, itemsPerPage, onPageChange, onLimitChange } = usePaginationState(1, 10);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["users"],
-    queryFn: () =>
-      getAllParcels({
-        search: searchTerm,
-        status: status === "all" ? undefined : status,
-        priority: priority === "all" ? undefined : priority,
-        service: service === "all" ? undefined : service,
-        page: currentPage,
-        limit: itemsPerPage,
-      }),
-    select: (data) => ({
-      parcels: data.data,
-      meta: data.meta as MetaData,
-    }),
+  const { data, isLoading, isError } = useParcels({
+    searchTerm,
+    status,
+    priority,
+    service,
+    currentPage,
+    itemsPerPage,
   });
 
   if (isLoading) return <LoadingState />;
-  if (isError) return <div>Error fetching data</div>;
-  if (!data?.parcels?.length) return <div>No data found</div>;
+  if (isError) return <ErrorState />;
 
   return (
     <div>
-      <ParcelTable parcels={data.parcels} />
+      <ParcelTable parcels={data?.parcels || []} />
       <UserPagination
         currentPage={currentPage}
-        totalItems={data.meta.total}
+        totalItems={data?.meta.total || 0}
         itemsPerPage={itemsPerPage}
         onPageChange={onPageChange}
         onItemsPerPageChange={onLimitChange}
