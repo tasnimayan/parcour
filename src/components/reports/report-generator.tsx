@@ -9,59 +9,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, Download, FileText, Table } from "lucide-react";
-import {
-  exportToCSV,
-  exportToPDF,
-  generateParcelReport,
-  generateUserReport,
-  generateFinancialReport,
-} from "@/lib/export-utils";
-import { mockParcels } from "@/lib/parcel-data";
-import { mockUsers } from "@/lib/users-data";
 
 export function ReportGenerator() {
   const [reportType, setReportType] = useState<string>("");
   const [dateFrom, setDateFrom] = useState<Date>();
   const [dateTo, setDateTo] = useState<Date>();
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerating] = useState(false);
 
-  const handleGenerateReport = async (format: "csv" | "pdf") => {
-    if (!reportType) return;
-
-    setIsGenerating(true);
-
-    try {
-      let reportData;
-
-      switch (reportType) {
-        case "parcels":
-          const parcels = mockParcels;
-          const dateRange = dateFrom && dateTo ? { from: dateFrom, to: dateTo } : undefined;
-          reportData = generateParcelReport(parcels, dateRange);
-          break;
-        case "users":
-          const users = mockUsers;
-          reportData = generateUserReport(users);
-          break;
-        case "financial":
-          const allParcels = mockParcels;
-          const financialDateRange = dateFrom && dateTo ? { from: dateFrom, to: dateTo } : undefined;
-          reportData = generateFinancialReport(allParcels, financialDateRange);
-          break;
-        default:
-          return;
-      }
-
-      if (format === "csv") {
-        exportToCSV(reportData);
-      } else {
-        exportToPDF(reportData);
-      }
-    } catch (error) {
-      console.error("Error generating report:", error);
-    } finally {
-      setIsGenerating(false);
-    }
+  const handleGenerateReport = async () => {
+    return null;
   };
 
   return (
@@ -131,12 +87,12 @@ export function ReportGenerator() {
 
         {/* Export Buttons */}
         <div className="flex gap-3">
-          <Button onClick={() => handleGenerateReport("csv")} disabled={!reportType || isGenerating} className="flex-1">
+          <Button onClick={handleGenerateReport} disabled={!reportType || isGenerating} className="flex-1">
             <Table className="w-4 h-4 mr-2" />
             Export CSV
           </Button>
           <Button
-            onClick={() => handleGenerateReport("pdf")}
+            onClick={handleGenerateReport}
             disabled={!reportType || isGenerating}
             variant="outline"
             className="flex-1"

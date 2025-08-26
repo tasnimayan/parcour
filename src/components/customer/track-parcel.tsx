@@ -7,7 +7,8 @@ import { Search, MapPin, Clock, Truck, Navigation, Phone, User } from "lucide-re
 import { StatusBadge } from "../agent/parcels/status-badge";
 import { useParcelTracking } from "@/hooks/use-parcels";
 import { EmptyState, ErrorState, LoadingState } from "../shared/data-states";
-import MiniMap from "@/lib/map-location";
+import dynamic from "next/dynamic";
+const MiniMap = dynamic(() => import("@/components/shared/map-location"), { ssr: false });
 
 const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
   const { data, isLoading, isError } = useParcelTracking(trackingCode);

@@ -1,18 +1,16 @@
 "use client";
 
-import type { UseFormReturn } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { CommonFormField } from "@/components/forms/common-form-field";
 import type { CustomerSignupFormData } from "@/lib/validations/customer";
+import { CommonSelect } from "@/components/shared/common-select";
 
-interface AddressSectionProps {
-  form: UseFormReturn<CustomerSignupFormData>;
-}
-
-export function AddressSection({ form }: AddressSectionProps) {
+export function AddressSection() {
   const {
     register,
+    control,
     formState: { errors },
-  } = form;
+  } = useFormContext<CustomerSignupFormData>();
 
   return (
     <div className="space-y-4">
@@ -56,18 +54,23 @@ export function AddressSection({ form }: AddressSectionProps) {
             error={errors.address?.postalCode?.message}
           />
 
-          <CommonFormField
-            id="address.country"
-            label="Country"
-            required
-            placeholder="Country"
-            register={register("address.country")}
-            error={errors.address?.country?.message}
-            options={[
-              { value: "Bangladesh", label: "Bangladesh" },
-              { value: "India", label: "India" },
-              { value: "Pakistan", label: "Pakistan" },
-            ]}
+          <Controller
+            name="address.country"
+            control={control}
+            render={({ field }) => (
+              <CommonSelect
+                name="address.country"
+                label="Country"
+                value={field.value}
+                options={[
+                  { value: "Bangladesh", label: "Bangladesh" },
+                  { value: "India", label: "India" },
+                  { value: "Pakistan", label: "Pakistan" },
+                ]}
+                placeholder="Country"
+                onValueChange={field.onChange}
+              />
+            )}
           />
         </div>
       </div>

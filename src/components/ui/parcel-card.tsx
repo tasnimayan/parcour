@@ -16,7 +16,6 @@ import {
   XCircle,
   AlertCircle,
   Navigation,
-  User,
 } from "lucide-react";
 
 interface ParcelCardProps {

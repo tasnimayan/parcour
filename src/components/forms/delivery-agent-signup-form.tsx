@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -39,15 +39,17 @@ export function DeliveryAgentSignupForm() {
   return (
     <Card className="w-full max-w-2xl mx-auto pt-6">
       <CardContent>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <PersonalInfoSection form={form} />
-          <ContactInfoSection form={form} />
-          <VehicleInfoSection form={form} />
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <PersonalInfoSection />
+            <ContactInfoSection />
+            <VehicleInfoSection />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating Account..." : "Create Account"}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </Button>
+          </form>
+        </FormProvider>
       </CardContent>
     </Card>
   );

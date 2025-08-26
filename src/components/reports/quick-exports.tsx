@@ -2,30 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, FileSpreadsheet, Users, Package } from "lucide-react";
-import { exportToCSV, generateParcelReport, generateUserReport, generateFinancialReport } from "@/lib/export-utils";
-import { mockParcels } from "@/lib/parcel-data";
-import { mockUsers } from "@/lib/users-data";
 
 export function QuickExports() {
   const handleQuickExport = (type: "parcels" | "users" | "financial") => {
-    let reportData;
-
-    switch (type) {
-      case "parcels":
-        const parcels = mockParcels;
-        reportData = generateParcelReport(parcels);
-        break;
-      case "users":
-        const users = mockUsers;
-        reportData = generateUserReport(users);
-        break;
-      case "financial":
-        const allParcels = mockParcels;
-        reportData = generateFinancialReport(allParcels);
-        break;
-    }
-
-    exportToCSV(reportData);
+    console.log(type);
+    return null;
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller, type UseFormReturn } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import type { DeliveryAgentSignupFormData } from "@/lib/validations/delivery-agent";
 import { CommonFormField } from "../common-form-field";
 import { Label } from "@/components/ui/label";
@@ -20,16 +20,12 @@ const EmploymentOptions = [
   { value: "CONTRACT", label: "Contract" },
 ];
 
-interface VehicleInfoSectionProps {
-  form: UseFormReturn<DeliveryAgentSignupFormData>;
-}
-
-export function VehicleInfoSection({ form }: VehicleInfoSectionProps) {
+export function VehicleInfoSection() {
   const {
     register,
     formState: { errors },
     control,
-  } = form;
+  } = useFormContext<DeliveryAgentSignupFormData>();
 
   return (
     <div className="space-y-4">

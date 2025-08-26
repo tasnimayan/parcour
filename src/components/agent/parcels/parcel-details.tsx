@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, MapPin, MessageSquare } from "lucide-react";
+import { Package, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { StatusBadge } from "./status-badge";
 import { useParams } from "next/navigation";

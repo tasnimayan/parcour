@@ -83,34 +83,10 @@ Parcour is a comprehensive courier tracking and parcel management system built w
 3. Set up environment variables:
 
    ```env
-   # Database
-   DATABASE_URL="postgresql://user:password@localhost:5432/parcour?schema=public"
-
-   # Authentication
-   NEXTAUTH_SECRET=your_nextauth_secret
-   NEXTAUTH_URL=http://localhost:3000
-
-   # Google
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-   # Maps
-   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-
-   # SMTP (for emails)
-   SMTP_HOST=smtp.example.com
-   SMTP_PORT=587
-   SMTP_USER=your_email@example.com
-   SMTP_PASSWORD=your_email_password
+   NEXT_PUBLIC_API_URL=your_api_base_url
    ```
 
-4. Run database migrations:
-
-   ```bash
-   npx prisma migrate dev
-   ```
-
-5. Start the development server:
+4. Start the development server:
 
    ```bash
    npm run dev
@@ -120,7 +96,7 @@ Parcour is a comprehensive courier tracking and parcel management system built w
    pnpm dev
    ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📚 API Routes
 

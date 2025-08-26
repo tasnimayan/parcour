@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, DollarSign } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { ParcelData } from "@/lib/admin-api";
 
 interface PaymentInfoProps {

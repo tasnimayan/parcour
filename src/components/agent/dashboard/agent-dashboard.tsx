@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, CheckCircle, Clock, AlertCircle, TrendingUp, Truck } from "lucide-react";
+import { Package, CheckCircle, AlertCircle, TrendingUp, Truck } from "lucide-react";
 import { useAgentStats } from "@/hooks/use-parcels";
 import { EmptyState, ErrorState, LoadingState } from "@/components/shared/data-states";
 import { AgentStats } from "@/lib/agent-api";

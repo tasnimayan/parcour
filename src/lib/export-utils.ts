@@ -1,3 +1,5 @@
+import { ParcelData, UserData } from "./admin-api";
+
 export interface ExportData {
   headers: string[];
   rows: (string | number)[][];
@@ -42,12 +44,12 @@ export function exportToPDF(data: ExportData) {
   document.body.removeChild(link);
 }
 
-export function generateParcelReport(parcels: any[], dateRange?: { from: Date; to: Date }) {
+export function generateParcelReport(parcels: ParcelData[], dateRange?: { from: Date; to: Date }) {
   let filteredParcels = parcels;
 
   if (dateRange) {
     filteredParcels = parcels.filter((parcel) => {
-      const bookingDate = new Date(parcel.bookingDate);
+      const bookingDate = new Date(parcel.createdAt);
       return bookingDate >= dateRange.from && bookingDate <= dateRange.to;
     });
   }
@@ -65,28 +67,28 @@ export function generateParcelReport(parcels: any[], dateRange?: { from: Date; t
       "Booking Date",
     ],
     rows: filteredParcels.map((parcel) => [
-      parcel.trackingId,
-      parcel.customerName,
+      parcel.trackingCode,
+      parcel.customer.fullName,
       parcel.status,
       parcel.pickupAddress,
       parcel.deliveryAddress,
-      `₹${parcel.amount}`,
+      `BDT ${parcel.codAmount}`,
       parcel.paymentType,
-      parcel.assignedAgent || "Unassigned",
-      new Date(parcel.bookingDate).toLocaleDateString(),
+      parcel.assignment?.agent?.fullName || "Unassigned",
+      new Date(parcel.createdAt).toLocaleDateString(),
     ]),
     filename: `parcel-report-${new Date().toISOString().split("T")[0]}`,
   };
 }
 
-export function generateUserReport(users: any[]) {
+export function generateUserReport(users: UserData[]) {
   return {
     headers: ["Name", "Email", "Role", "Phone", "Join Date", "Status"],
     rows: users.map((user) => [
-      user.name,
+      user.profile.fullName,
       user.email,
       user.role,
-      user.phone || "N/A",
+      user.profile.phone || "N/A",
       new Date(user.createdAt).toLocaleDateString(),
       "Active",
     ]),
@@ -94,23 +96,23 @@ export function generateUserReport(users: any[]) {
   };
 }
 
-export function generateFinancialReport(parcels: any[], dateRange?: { from: Date; to: Date }) {
+export function generateFinancialReport(parcels: ParcelData[], dateRange?: { from: Date; to: Date }) {
   let filteredParcels = parcels;
 
   if (dateRange) {
     filteredParcels = parcels.filter((parcel) => {
-      const bookingDate = new Date(parcel.bookingDate);
+      const bookingDate = new Date(parcel.createdAt);
       return bookingDate >= dateRange.from && bookingDate <= dateRange.to;
     });
   }
 
-  const totalRevenue = filteredParcels.reduce((sum, parcel) => sum + parcel.amount, 0);
+  const totalRevenue = filteredParcels.reduce((sum, parcel) => sum + parcel.codAmount, 0);
   const codAmount = filteredParcels
     .filter((p) => p.paymentType === "COD")
-    .reduce((sum, parcel) => sum + parcel.amount, 0);
+    .reduce((sum, parcel) => sum + parcel.codAmount, 0);
   const prepaidAmount = filteredParcels
     .filter((p) => p.paymentType === "Prepaid")
-    .reduce((sum, parcel) => sum + parcel.amount, 0);
+    .reduce((sum, parcel) => sum + parcel.codAmount, 0);
 
   return {
     headers: ["Metric", "Value"],
@@ -119,9 +121,9 @@ export function generateFinancialReport(parcels: any[], dateRange?: { from: Date
       ["Total Revenue", `₹${totalRevenue}`],
       ["COD Collections", `₹${codAmount}`],
       ["Prepaid Revenue", `₹${prepaidAmount}`],
-      ["Delivered Parcels", filteredParcels.filter((p) => p.status === "Delivered").length],
-      ["Pending Parcels", filteredParcels.filter((p) => p.status !== "Delivered" && p.status !== "Failed").length],
-      ["Failed Deliveries", filteredParcels.filter((p) => p.status === "Failed").length],
+      ["Delivered Parcels", filteredParcels.filter((p) => p.status === "delivered").length],
+      ["Pending Parcels", filteredParcels.filter((p) => p.status !== "delivered" && p.status !== "failed").length],
+      ["Failed Deliveries", filteredParcels.filter((p) => p.status === "failed").length],
     ],
     filename: `financial-report-${new Date().toISOString().split("T")[0]}`,
   };

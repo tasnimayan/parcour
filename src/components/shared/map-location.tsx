@@ -45,7 +45,7 @@ const MiniMap: React.FC<MiniMapProps> = ({ lat, lng, className }) => {
           pathOptions={{
             color: "#2563eb",
             fillColor: "#3b82f6",
-            // fillOpacity: 0.3,
+            fillOpacity: 0.3,
           }}
         />
       </MapContainer>

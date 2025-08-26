@@ -6,32 +6,22 @@ import { forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { UseFormRegisterReturn } from "react-hook-form";
 
-interface BaseFormFieldProps {
+interface CommonFormFieldProps {
   id: string;
   label: string;
-  error?: string;
   required?: boolean;
   className?: string;
-}
-
-interface InputFormFieldProps extends BaseFormFieldProps {
   type?: "text" | "email" | "password" | "tel" | "date" | "number";
   placeholder?: string;
   step?: string;
-  register?: any;
+  register?: UseFormRegisterReturn;
+  error?: string;
 }
-
-interface SelectFormFieldProps extends BaseFormFieldProps {
-  placeholder?: string;
-  options: { value: string; label: string }[];
-  onValueChange?: (value: string) => void;
-}
-
-type CommonFormFieldProps = InputFormFieldProps | SelectFormFieldProps;
 
 export const CommonFormField = forwardRef<HTMLInputElement | HTMLButtonElement, CommonFormFieldProps>(
-  ({ id, label, error, required = false, className, ...props }, ref) => {
+  ({ id, label, error, type = "text", required = false, className, ...props }, ref) => {
     return (
       <div className={cn("space-y-2", className)}>
         <Label htmlFor={id}>
@@ -39,7 +29,7 @@ export const CommonFormField = forwardRef<HTMLInputElement | HTMLButtonElement, 
         </Label>
         <Input
           id={id}
-          type={props.type || "text"}
+          type={type}
           placeholder={props.placeholder}
           step={props.step}
           {...(props.register || {})}

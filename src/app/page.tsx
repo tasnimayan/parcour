@@ -2,7 +2,7 @@ import { Footer } from "@/components/landing/footer";
 import { Hero } from "@/components/landing/hero";
 import { RoleCard } from "@/components/landing/role-card";
 
-export const rolesMeta = {
+const rolesMeta = {
   customer: {
     title: "Customer",
     description: "Book shipments, track parcels in real-time, and manage deliveries.",

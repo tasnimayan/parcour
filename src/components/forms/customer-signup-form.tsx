@@ -1,5 +1,5 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,21 +49,23 @@ export function CustomerSignupForm({ onSubmit, isLoading = false, location }: Cu
         <CardDescription>Join our courier service to start sending and receiving packages</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <PersonalInfoSection form={form} />
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <PersonalInfoSection />
 
-          <div className="h-px bg-muted-foreground w-full" />
+            <div className="h-px bg-muted-foreground w-full" />
 
-          <ContactInfoSection form={form} />
+            <ContactInfoSection />
 
-          <div className="h-px bg-muted-foreground w-full" />
+            <div className="h-px bg-muted-foreground w-full" />
 
-          <AddressSection form={form} />
+            <AddressSection />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating Account..." : "Create Account"}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </Button>
+          </form>
+        </FormProvider>
       </CardContent>
     </Card>
   );

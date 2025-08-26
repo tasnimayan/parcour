@@ -1,20 +1,16 @@
 "use client";
 
-import type { UseFormReturn } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { CommonFormField } from "@/components/forms/common-form-field";
 import type { CustomerSignupFormData } from "@/lib/validations/customer";
 
 type ContactInfo = Pick<CustomerSignupFormData, "phone" | "altPhone">;
 
-interface ContactInfoSectionProps<T extends ContactInfo> {
-  form: UseFormReturn<T>;
-}
-
-export function ContactInfoSection({ form }: ContactInfoSectionProps<ContactInfo>) {
+export function ContactInfoSection() {
   const {
     register,
     formState: { errors },
-  } = form;
+  } = useFormContext<ContactInfo>();
 
   return (
     <div className="space-y-4">

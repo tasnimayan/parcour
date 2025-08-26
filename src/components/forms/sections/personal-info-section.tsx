@@ -1,21 +1,17 @@
 "use client";
 
-import type { UseFormReturn } from "react-hook-form";
 import { CommonFormField } from "@/components/forms/common-form-field";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import type { CustomerSignupFormData } from "@/lib/validations/customer";
 
-interface PersonalInfoSectionProps {
-  form: UseFormReturn;
-}
-
-export function PersonalInfoSection({ form }: PersonalInfoSectionProps) {
+export function PersonalInfoSection() {
   const {
     register,
     formState: { errors },
     control,
-  } = form;
+  } = useFormContext<CustomerSignupFormData>();
 
   return (
     <div className="space-y-4">

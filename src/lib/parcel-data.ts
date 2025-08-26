@@ -1,7 +1,4 @@
-import { mockUsers } from "./auth-api";
-
-// Mock data and types for parcel management
-export type ParcelSize = "small" | "medium" | "large" | "extra-large";
+export type ParcelSize = "small" | "medium" | "large" | "extra_large";
 export type ParcelStatus = "pending" | "assigned" | "picked_up" | "in_transit" | "delivered" | "failed";
 export type PaymentType = "cod" | "prepaid";
 
@@ -158,7 +155,7 @@ export const getParcelSizePrice = (size: ParcelSize): number => {
     small: 10,
     medium: 20,
     large: 35,
-    "extra-large": 50,
+    extra_large: 50,
   };
   return prices[size];
 };
