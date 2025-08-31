@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const adminSignupSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -7,6 +7,6 @@ export const adminSignupSchema = z.object({
   department: z.enum(["operation", "coordinator", "support"], {
     required_error: "Please select a department",
   }),
-})
+});
 
-export type AdminSignupFormData = z.infer<typeof adminSignupSchema>
+export type AdminSignupFormData = z.infer<typeof adminSignupSchema>;

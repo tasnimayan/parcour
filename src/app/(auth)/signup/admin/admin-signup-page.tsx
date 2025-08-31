@@ -1,6 +1,22 @@
+"use client";
+
 import { AdminSignupForm } from "@/components/forms/admin-signup-form";
+import { adminSignupRequest } from "@/lib/auth-api";
+import { AdminSignupFormData } from "@/lib/validations/admin";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function AdminSignupPage() {
+  const { mutate, isPending } = useMutation({
+    mutationFn: adminSignupRequest,
+    onSuccess: () => toast.success("Account created successfully!"),
+    onError: () => toast.error("Something went wrong. Please try again."),
+  });
+
+  const handleSubmit = (data: AdminSignupFormData) => {
+    mutate(data);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
@@ -8,7 +24,7 @@ export default function AdminSignupPage() {
           <h1 className="text-3xl font-bold text-gray-900">Admin Registration</h1>
           <p className="text-gray-600 mt-2">Join our courier management team</p>
         </div>
-        <AdminSignupForm />
+        <AdminSignupForm onSubmit={handleSubmit} isPending={isPending} />
       </div>
     </div>
   );

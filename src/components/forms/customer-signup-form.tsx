@@ -10,14 +10,14 @@ import { AddressSection } from "./sections/address-section";
 
 interface CustomerSignupFormProps {
   onSubmit: (data: CustomerSignupFormData) => void;
-  isLoading?: boolean;
-  location?: { lat: number; lng: number } | null;
+  isPending?: boolean;
+  defaultValues?: CustomerSignupFormData;
 }
 
-export function CustomerSignupForm({ onSubmit, isLoading = false, location }: CustomerSignupFormProps) {
+export function CustomerSignupForm({ onSubmit, isPending = false, defaultValues }: CustomerSignupFormProps) {
   const form = useForm<CustomerSignupFormData>({
     resolver: zodResolver(customerSignupSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       email: "",
       password: "",
       fullName: "",
@@ -32,15 +32,9 @@ export function CustomerSignupForm({ onSubmit, isLoading = false, location }: Cu
         city: "",
         postalCode: "",
         country: "",
-        latitude: location?.lat,
-        longitude: location?.lng,
       },
     },
   });
-
-  const handleSubmit = (data: CustomerSignupFormData) => {
-    onSubmit(data);
-  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -50,19 +44,15 @@ export function CustomerSignupForm({ onSubmit, isLoading = false, location }: Cu
       </CardHeader>
       <CardContent>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <PersonalInfoSection />
-
-            <div className="h-px bg-muted-foreground w-full" />
 
             <ContactInfoSection />
 
-            <div className="h-px bg-muted-foreground w-full" />
-
             <AddressSection />
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
         </FormProvider>

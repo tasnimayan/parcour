@@ -20,8 +20,8 @@ interface CommonFormFieldProps {
   error?: string;
 }
 
-export const CommonFormField = forwardRef<HTMLInputElement | HTMLButtonElement, CommonFormFieldProps>(
-  ({ id, label, error, type = "text", required = false, className, ...props }, ref) => {
+export const CommonFormField = forwardRef<HTMLInputElement, CommonFormFieldProps>(
+  ({ id, label, error, type = "text", required = false, className, register, ...props }, ref) => {
     return (
       <div className={cn("space-y-2", className)}>
         <Label htmlFor={id}>
@@ -32,10 +32,9 @@ export const CommonFormField = forwardRef<HTMLInputElement | HTMLButtonElement, 
           type={type}
           placeholder={props.placeholder}
           step={props.step}
-          {...(props.register || {})}
-          ref={ref as React.Ref<HTMLInputElement>}
+          {...(register || {})}
+          ref={register ? undefined : ref}
         />
-
         {error && <p className="text-sm text-destructive">{error}</p>}
       </div>
     );

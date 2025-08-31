@@ -2,10 +2,9 @@
 
 import type React from "react";
 import { createContext, useContext, useReducer, useEffect } from "react";
-import { AuthUser, type UserRole } from "../../types";
-import { AdminPayload, AgentPayload, CustomerPayload } from "../../types/auth";
+import { AuthUser } from "../../types";
 import Cookies from "js-cookie";
-import { adminSignupRequest, loginRequest, logoutRequest, sessionRequest } from "@/lib/auth-api";
+import { loginRequest, logoutRequest, sessionRequest } from "@/lib/auth-api";
 
 export interface AuthState {
   user: AuthUser | null;
@@ -16,11 +15,6 @@ export interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; message: string; role?: string }>;
-  // Modification: set conditional payload type depending on role
-  register: (
-    role: UserRole,
-    payload: AdminPayload | AgentPayload | CustomerPayload
-  ) => Promise<{ success: boolean; message: string }>;
   logout: () => Promise<void>;
 }
 
@@ -126,47 +120,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Modification: make it for all roles - use abstraction
-  const register = async (role: string, payload: AdminPayload | AgentPayload | CustomerPayload) => {
-    dispatch({ type: "AUTH_START" });
-    try {
-      let res;
-
-      switch (role) {
-        case "ADMIN":
-          const { email, password, fullName, department } = payload as AdminPayload;
-          res = await adminSignupRequest(email, password, fullName, department);
-          break;
-        case "AGENT":
-          // const { email, password, fullName, phone } = payload as AgentPayload;
-          // res = await agentSignupRequest(email, password, fullName, phone);
-          break;
-        case "CUSTOMER":
-          // const { email, password, fullName, phone, address } = payload as CustomerPayload;
-          // res = await customerSignupRequest(email, password, fullName, phone, address);
-          break;
-      }
-
-      if (!res?.data) {
-        return { success: false, message: "Invalid credentials" };
-      }
-      Cookies.set("parcour_auth", res.data?.token);
-      dispatch({
-        type: "AUTH_SUCCESS",
-        payload: {
-          id: res.data?.user.id,
-          email: res.data?.user.email,
-          name: res.data?.user.profile.fullName,
-          role: role as UserRole,
-        },
-      });
-      return { success: true, message: "Registration successful" };
-    } catch (error) {
-      dispatch({ type: "AUTH_ERROR", payload: (error as Error).message });
-      return { success: false, message: (error as Error).message };
-    }
-  };
-
   // Logout - Ok
   const logout = async () => {
     if (!state.user) return;
@@ -179,7 +132,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         ...state,
         login,
-        register,
         logout,
       }}
     >

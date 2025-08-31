@@ -1,5 +1,7 @@
 import { ApiResponse, AuthUser, UserRole } from "@/types";
 import Cookies from "js-cookie";
+import { CustomerSignupFormData } from "./validations/customer";
+import { AdminSignupFormData } from "./validations/admin";
 // Mock authentication system for the courier management platform
 type AdminAuthResponse = {
   token: string;
@@ -31,18 +33,13 @@ export const loginRequest = async (email: string, password: string): Promise<Api
   return await res.json();
 };
 
-export const adminSignupRequest = async (
-  email: string,
-  password: string,
-  fullName: string,
-  department: string
-): Promise<ApiResponse<AdminAuthResponse>> => {
+export const adminSignupRequest = async (data: AdminSignupFormData): Promise<ApiResponse<AdminAuthResponse>> => {
   const res = await fetch(`${API_URL}/auth/signup/admin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password, fullName, department }),
+    body: JSON.stringify(data),
   });
 
   return await res.json();
@@ -65,28 +62,15 @@ export const logoutRequest = async (): Promise<void> => {
   Cookies.remove("parcour_auth");
 };
 
-// Modification: Delete Mock user data
-export const mockUsers = [
-  {
-    id: "1",
-    email: "admin@gmail.com",
-    name: "Admin User",
-    role: "admin",
-    phone: "01645800408",
-  },
-  {
-    id: "2",
-    email: "agent@gmail.com",
-    name: "John Delivery",
-    role: "agent",
-    phone: "01752100936",
-  },
-  {
-    id: "3",
-    email: "customer@gmail.com",
-    name: "Jane Customer",
-    role: "customer",
-    phone: "01955907174",
-    address: "Mirpur 1, Dhaka-1210, Bangladesh",
-  },
-];
+// modification:
+export const customerSignupRequest = async (data: CustomerSignupFormData): Promise<ApiResponse<AdminAuthResponse>> => {
+  const res = await fetch(`${API_URL}/auth/signup/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return await res.json();
+};

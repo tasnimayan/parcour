@@ -1,48 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { CustomerSignupForm } from "@/components/forms/customer-signup-form";
 import type { CustomerSignupFormData } from "@/lib/validations/customer";
 import { toast } from "sonner";
+import { customerSignupRequest } from "@/lib/auth-api";
+import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "@/hooks/use-location";
 
 export default function SignupPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const location = useLocation();
 
-  const handleSignup = async (data: CustomerSignupFormData) => {
-    setIsLoading(true);
-
-    try {
-      // Here you would typically make an API call to create the customer
-      console.log("Customer signup data:", data);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
+  const { mutate, isPending } = useMutation({
+    mutationFn: customerSignupRequest,
+    onSuccess: () => {
       toast.success("Account created successfully!");
-
-      // Redirect to dashboard or login page
-      // router.push('/dashboard')
-    } catch {
+    },
+    onError: () => {
       toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    },
+  });
+
+  const handleSubmit = (data: CustomerSignupFormData) => {
+    const formData = { ...data, address: { ...data.address, latitude: location?.lat, longitude: location?.lng } };
+    mutate(formData);
   };
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("Geolocation is not supported by your browser");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    });
-  }, []);
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
@@ -54,7 +35,7 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <CustomerSignupForm onSubmit={handleSignup} isLoading={isLoading} location={location} />
+        <CustomerSignupForm onSubmit={handleSubmit} isPending={isPending} />
       </div>
     </div>
   );

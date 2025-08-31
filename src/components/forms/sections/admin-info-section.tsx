@@ -1,19 +1,15 @@
-import { Controller, type UseFormReturn } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import type { AdminSignupFormData } from "@/lib/validations/admin";
 import { CommonFormField } from "../common-form-field";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface AdminInfoSectionProps {
-  form: UseFormReturn<AdminSignupFormData>;
-}
-
-export function AdminInfoSection({ form }: AdminInfoSectionProps) {
+export function AdminInfoSection() {
   const {
     register,
     formState: { errors },
     control,
-  } = form;
+  } = useFormContext<AdminSignupFormData>();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
