@@ -28,3 +28,17 @@ export const USER_STATUS = [
   { value: "inactive", label: "Inactive" },
   { value: "pending", label: "Pending" },
 ];
+
+export const VEHICLE_OPTIONS = [
+  { value: "bike", label: "Bike" },
+  { value: "car", label: "Car" },
+  { value: "van", label: "Van" },
+  { value: "truck", label: "Truck" },
+  { value: "bicycle", label: "Bicycle" },
+];
+
+export const EMPLOYMENT_OPTIONS = [
+  { value: "full_time", label: "Full Time" },
+  { value: "part_time", label: "Part Time" },
+  { value: "contract", label: "Contract" },
+];

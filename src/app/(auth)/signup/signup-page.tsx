@@ -1,7 +1,7 @@
 "use client";
 
 import { CustomerSignupForm } from "@/components/forms/customer-signup-form";
-import type { CustomerSignupFormData } from "@/lib/validations/customer";
+import type { CustomerSignupFormData } from "@/lib/validations/auth";
 import { toast } from "sonner";
 import { customerSignupRequest } from "@/lib/auth-api";
 import { useMutation } from "@tanstack/react-query";

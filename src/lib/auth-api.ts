@@ -1,8 +1,7 @@
 import { ApiResponse, AuthUser, UserRole } from "@/types";
 import Cookies from "js-cookie";
-import { CustomerSignupFormData } from "./validations/customer";
-import { AdminSignupFormData } from "./validations/admin";
-// Mock authentication system for the courier management platform
+import { AgentSignupFormData, CustomerSignupFormData, AdminSignupFormData } from "./validations/auth";
+
 type AdminAuthResponse = {
   token: string;
   user: {
@@ -63,8 +62,19 @@ export const logoutRequest = async (): Promise<void> => {
 };
 
 // modification:
-export const customerSignupRequest = async (data: CustomerSignupFormData): Promise<ApiResponse<AdminAuthResponse>> => {
+export const customerSignupRequest = async (data: CustomerSignupFormData): Promise<ApiResponse<AuthUser>> => {
   const res = await fetch(`${API_URL}/auth/signup/customer`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return await res.json();
+};
+export const agentSignupRequest = async (data: AgentSignupFormData): Promise<ApiResponse<AuthUser>> => {
+  const res = await fetch(`${API_URL}/auth/signup/agent`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

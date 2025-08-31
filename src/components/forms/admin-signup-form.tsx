@@ -4,8 +4,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { adminSignupSchema, type AdminSignupFormData } from "@/lib/validations/admin";
+import { adminSignupSchema, type AdminSignupFormData } from "@/lib/validations/auth";
 import { AdminInfoSection } from "./sections/admin-info-section";
+import Link from "next/link";
 interface AdminSignupFormProps {
   onSubmit: (data: AdminSignupFormData) => void;
   isPending?: boolean;
@@ -22,7 +23,6 @@ export function AdminSignupForm({ onSubmit, isPending = false }: AdminSignupForm
         <CardTitle>Admin Information</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="text-xs">{JSON.stringify(form.watch())}</div>
         <FormProvider {...form}>
           <form id="admin-signup-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <AdminInfoSection />
@@ -32,6 +32,11 @@ export function AdminSignupForm({ onSubmit, isPending = false }: AdminSignupForm
             </Button>
           </form>
         </FormProvider>
+        <div className="mt-6 text-center">
+          <Link href="/login/admin" className="text-sm">
+            {"Already have an account? Sign in"}
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

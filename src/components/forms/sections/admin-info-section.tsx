@@ -1,5 +1,5 @@
 import { Controller, useFormContext } from "react-hook-form";
-import type { AdminSignupFormData } from "@/lib/validations/admin";
+import type { AdminSignupFormData } from "@/lib/validations/auth";
 import { CommonFormField } from "../common-form-field";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

@@ -2,7 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { CommonFormField } from "@/components/forms/common-form-field";
-import type { CustomerSignupFormData } from "@/lib/validations/customer";
+import type { CustomerSignupFormData } from "@/lib/validations/auth";
 
 type ContactInfo = Pick<CustomerSignupFormData, "phone" | "altPhone">;
 

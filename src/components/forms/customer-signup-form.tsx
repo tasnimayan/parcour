@@ -3,37 +3,22 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { customerSignupSchema, type CustomerSignupFormData } from "@/lib/validations/customer";
+import { customerSignupSchema, type CustomerSignupFormData } from "@/lib/validations/auth";
 import { PersonalInfoSection } from "./sections/personal-info-section";
 import { ContactInfoSection } from "./sections/contact-info-section";
 import { AddressSection } from "./sections/address-section";
+import Link from "next/link";
 
 interface CustomerSignupFormProps {
   onSubmit: (data: CustomerSignupFormData) => void;
   isPending?: boolean;
-  defaultValues?: CustomerSignupFormData;
+  defaultValues?: Partial<CustomerSignupFormData>;
 }
 
 export function CustomerSignupForm({ onSubmit, isPending = false, defaultValues }: CustomerSignupFormProps) {
   const form = useForm<CustomerSignupFormData>({
     resolver: zodResolver(customerSignupSchema),
-    defaultValues: defaultValues || {
-      email: "",
-      password: "",
-      fullName: "",
-      phone: "",
-      altPhone: "",
-      governmentId: "",
-      dob: "",
-      gender: undefined,
-      address: {
-        label: "",
-        address: "",
-        city: "",
-        postalCode: "",
-        country: "",
-      },
-    },
+    defaultValues: defaultValues || {},
   });
 
   return (
@@ -56,6 +41,12 @@ export function CustomerSignupForm({ onSubmit, isPending = false, defaultValues 
             </Button>
           </form>
         </FormProvider>
+
+        <div className="mt-6 text-center">
+          <Link href="/login" className="text-sm">
+            {"Already have an account? Sign in"}
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

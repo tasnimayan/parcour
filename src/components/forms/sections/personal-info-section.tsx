@@ -4,7 +4,7 @@ import { CommonFormField } from "@/components/forms/common-form-field";
 import { Controller, useFormContext } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { CustomerSignupFormData } from "@/lib/validations/customer";
+import type { CustomerSignupFormData } from "@/lib/validations/auth";
 
 export function PersonalInfoSection() {
   const {
@@ -64,11 +64,11 @@ export function PersonalInfoSection() {
             render={({ field }) => (
               <RadioGroup onValueChange={field.onChange} className="flex gap-2">
                 <Label className="flex items-center gap-2">
-                  <RadioGroupItem value="MALE" />
+                  <RadioGroupItem value="male" />
                   Male
                 </Label>
                 <Label className="flex items-center gap-2">
-                  <RadioGroupItem value="FEMALE" />
+                  <RadioGroupItem value="female" />
                   Female
                 </Label>
               </RadioGroup>

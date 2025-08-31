@@ -1,31 +1,19 @@
 "use client";
 
 import { Controller, useFormContext } from "react-hook-form";
-import type { DeliveryAgentSignupFormData } from "@/lib/validations/delivery-agent";
+import { AgentSignupFormData } from "@/lib/validations/auth";
+
 import { CommonFormField } from "../common-form-field";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const VehicleOptions = [
-  { value: "BIKE", label: "Bike" },
-  { value: "CAR", label: "Car" },
-  { value: "VAN", label: "Van" },
-  { value: "TRUCK", label: "Truck" },
-  { value: "BICYCLE", label: "Bicycle" },
-];
-
-const EmploymentOptions = [
-  { value: "FULL_TIME", label: "Full Time" },
-  { value: "PART_TIME", label: "Part Time" },
-  { value: "CONTRACT", label: "Contract" },
-];
+import { EMPLOYMENT_OPTIONS, VEHICLE_OPTIONS } from "@/lib/constants";
 
 export function VehicleInfoSection() {
   const {
     register,
     formState: { errors },
     control,
-  } = useFormContext<DeliveryAgentSignupFormData>();
+  } = useFormContext<AgentSignupFormData>();
 
   return (
     <div className="space-y-4">
@@ -44,7 +32,7 @@ export function VehicleInfoSection() {
                   <SelectValue placeholder="Select vehicle type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {VehicleOptions.map((option) => (
+                  {VEHICLE_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -68,7 +56,7 @@ export function VehicleInfoSection() {
                   <SelectValue placeholder="Select employment type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {EmploymentOptions.map((option) => (
+                  {EMPLOYMENT_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>

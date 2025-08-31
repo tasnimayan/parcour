@@ -2,14 +2,20 @@
 
 import { AdminSignupForm } from "@/components/forms/admin-signup-form";
 import { adminSignupRequest } from "@/lib/auth-api";
-import { AdminSignupFormData } from "@/lib/validations/admin";
+import { AdminSignupFormData } from "@/lib/validations/auth";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function AdminSignupPage() {
+  const router = useRouter();
+
   const { mutate, isPending } = useMutation({
     mutationFn: adminSignupRequest,
-    onSuccess: () => toast.success("Account created successfully!"),
+    onSuccess: () => {
+      toast.success("Account created successfully!");
+      router.push("/login/admin");
+    },
     onError: () => toast.error("Something went wrong. Please try again."),
   });
 

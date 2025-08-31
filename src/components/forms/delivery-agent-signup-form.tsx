@@ -2,39 +2,25 @@
 
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { deliveryAgentSignupSchema, type DeliveryAgentSignupFormData } from "@/lib/validations/delivery-agent";
 import { PersonalInfoSection } from "./sections/personal-info-section";
 import { ContactInfoSection } from "./sections/contact-info-section";
 import { VehicleInfoSection } from "./sections/vehicle-info-section";
-import { toast } from "sonner";
+import Link from "next/link";
+import { agentSignupSchema, AgentSignupFormData } from "@/lib/validations/auth";
 
-export function DeliveryAgentSignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
+interface AgentSignupFormProps {
+  onSubmit: (data: AgentSignupFormData) => void;
+  isPending?: boolean;
+  defaultValues?: Partial<AgentSignupFormData>;
+}
 
-  const form = useForm<DeliveryAgentSignupFormData>({
-    resolver: zodResolver(deliveryAgentSignupSchema),
+export function DeliveryAgentSignupForm({ onSubmit, isPending = false, defaultValues }: AgentSignupFormProps) {
+  const form = useForm<AgentSignupFormData>({
+    resolver: zodResolver(agentSignupSchema),
+    defaultValues: defaultValues || {},
   });
-
-  const onSubmit = async (data: DeliveryAgentSignupFormData) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      console.log("Delivery Agent Signup Data:", data);
-
-      toast.success("Delivery agent account created successfully.");
-
-      form.reset();
-    } catch {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto pt-6">
@@ -45,11 +31,16 @@ export function DeliveryAgentSignupForm() {
             <ContactInfoSection />
             <VehicleInfoSection />
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
         </FormProvider>
+        <div className="mt-6 text-center">
+          <Link href="/login/agent" className="text-sm underline">
+            {"Already have an account? Sign in"}
+          </Link>
+        </div>
       </CardContent>
     </Card>
   );

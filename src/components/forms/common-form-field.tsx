@@ -1,8 +1,3 @@
-"use client";
-
-import type React from "react";
-
-import { forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -20,25 +15,23 @@ interface CommonFormFieldProps {
   error?: string;
 }
 
-export const CommonFormField = forwardRef<HTMLInputElement, CommonFormFieldProps>(
-  ({ id, label, error, type = "text", required = false, className, register, ...props }, ref) => {
-    return (
-      <div className={cn("space-y-2", className)}>
-        <Label htmlFor={id}>
-          {label} {required && "*"}
-        </Label>
-        <Input
-          id={id}
-          type={type}
-          placeholder={props.placeholder}
-          step={props.step}
-          {...(register || {})}
-          ref={register ? undefined : ref}
-        />
-        {error && <p className="text-sm text-destructive">{error}</p>}
-      </div>
-    );
-  }
-);
-
-CommonFormField.displayName = "CommonFormField";
+export const CommonFormField = ({
+  id,
+  label,
+  error,
+  type = "text",
+  required = false,
+  className,
+  register,
+  ...props
+}: CommonFormFieldProps) => {
+  return (
+    <div className={cn("space-y-2", className)}>
+      <Label htmlFor={id}>
+        {label} {required && "*"}
+      </Label>
+      <Input id={id} type={type} placeholder={props.placeholder} step={props.step} {...(register || {})} />
+      {error && <p className="text-sm text-destructive">{error}</p>}
+    </div>
+  );
+};
