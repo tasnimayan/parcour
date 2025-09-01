@@ -14,7 +14,7 @@ export function AdminInfoSection() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <CommonFormField
-        id="email"
+        name="email"
         label="Email"
         type="email"
         placeholder="Email"
@@ -24,7 +24,7 @@ export function AdminInfoSection() {
       />
 
       <CommonFormField
-        id="password"
+        name="password"
         label="Password"
         type="password"
         placeholder="Password"
@@ -34,7 +34,7 @@ export function AdminInfoSection() {
       />
 
       <CommonFormField
-        id="fullName"
+        name="fullName"
         label="Full Name"
         placeholder="Full name"
         register={register("fullName")}

@@ -70,7 +70,7 @@ export function VehicleInfoSection() {
         </div>
 
         <CommonFormField
-          id="vehicleNumber"
+          name="vehicleNumber"
           label="Vehicle Number"
           register={register("vehicleNumber")}
           error={errors.vehicleNumber?.message}
@@ -78,7 +78,7 @@ export function VehicleInfoSection() {
         />
 
         <CommonFormField
-          id="licenseNo"
+          name="licenseNo"
           label="License Number"
           register={register("licenseNo")}
           error={errors.licenseNo?.message}

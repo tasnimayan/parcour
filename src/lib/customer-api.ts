@@ -7,22 +7,25 @@ import { AgentStats } from "./agent-api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-interface CreateParcelParams extends ParcelFormValues {
-  customerId: string;
-}
-export const fetchCreateParcel = async (data: CreateParcelParams): Promise<ApiResponse<ParcelData[]>> => {
+export const fetchCreateParcel = async (data: ParcelFormValues): Promise<ApiResponse<ParcelData[]>> => {
+  const { length, width, height } = data.parcelSize;
+
+  // calculate delivery charge amount
   const codAmount = calculateParcelCost({
-    size: data.parcelSize,
+    length,
+    width,
+    height,
     weight: Number(data.parcelWeight),
     serviceType: data.serviceType,
   });
+
   const res = await fetch(`${API_URL}/parcel`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${Cookies.get("parcour_auth")}`,
     },
-    body: JSON.stringify({ ...data, codAmount }),
+    body: JSON.stringify({ ...data, parcelSize: `${length}x${width}x${height}`, codAmount }),
   });
   return res.json();
 };

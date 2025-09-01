@@ -19,7 +19,7 @@ export function PersonalInfoSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <CommonFormField
-          id="fullName"
+          name="fullName"
           label="Full Name"
           required
           placeholder="Full name"
@@ -28,7 +28,7 @@ export function PersonalInfoSection() {
         />
 
         <CommonFormField
-          id="email"
+          name="email"
           label="Email"
           type="email"
           required
@@ -38,7 +38,7 @@ export function PersonalInfoSection() {
         />
 
         <CommonFormField
-          id="password"
+          name="password"
           label="Password"
           type="password"
           required
@@ -48,7 +48,7 @@ export function PersonalInfoSection() {
         />
 
         <CommonFormField
-          id="dob"
+          name="dob"
           label="Date of Birth"
           type="date"
           register={register("dob")}
@@ -79,7 +79,7 @@ export function PersonalInfoSection() {
 
         <div className="col-span-2">
           <CommonFormField
-            id="governmentId"
+            name="governmentId"
             label="NID"
             placeholder="NID number (optional)"
             register={register("governmentId")}

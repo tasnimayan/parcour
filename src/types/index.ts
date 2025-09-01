@@ -1,5 +1,6 @@
 export type UserRole = "admin" | "agent" | "customer";
 export type UserStatus = "active" | "inactive" | "pending";
+export type ServiceType = "standard" | "express" | "urgent";
 
 export interface AuthUser {
   id: string;

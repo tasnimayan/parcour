@@ -1,10 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Package, MapPin } from "lucide-react";
 import { format } from "date-fns";
-import { StatusBadge } from "./status-badge";
 import { useParams } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
 import { EmptyState, ErrorState, LoadingState } from "@/components/shared/data-states";
@@ -15,17 +13,6 @@ import { useAuth } from "@/components/contexts/auth-context";
 import { PaymentInfoCard } from "./payment-info-card";
 import { CustomerInfoCard } from "./customer-info-card";
 import { ParcelUpdateSection } from "./parcel-qr-update-card";
-
-const getPriorityVariant = (priority: string) => {
-  switch (priority) {
-    case "urgent":
-      return "destructive";
-    case "express":
-      return "default";
-    default:
-      return "secondary";
-  }
-};
 
 const ParcelDetails = () => {
   const { id } = useParams();
@@ -45,14 +32,7 @@ const ParcelDetails = () => {
           </>
         }
         subtitle="Parcel Details & Status Management"
-      >
-        <div className="flex items-center space-x-3">
-          <Badge className="rounded-full" variant={getPriorityVariant(parcel.priorityType)}>
-            {parcel.priorityType}
-          </Badge>
-          <StatusBadge className="rounded-full" status={parcel.status} />
-        </div>
-      </PageHeader>
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

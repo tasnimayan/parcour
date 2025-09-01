@@ -103,6 +103,7 @@ const MyParcels = ({ searchTerm, status }: { searchTerm: string; status: ParcelS
     </div>
   );
 };
+
 const MyBookings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState<ParcelStatus | "all">("all");

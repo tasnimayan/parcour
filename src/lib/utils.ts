@@ -1,3 +1,4 @@
+import { ServiceType } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -6,30 +7,43 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export interface ParcelCostParams {
-  size: string;
+  length: number;
+  width: number;
+  height: number;
   weight: number;
-  serviceType: string;
+  serviceType: ServiceType;
 }
 
-export const calculateParcelCost = ({ size, weight, serviceType }: ParcelCostParams): number => {
-  // Base cost based on size
-  const sizeCosts: Record<string, number> = {
-    small: 70,
-    medium: 100,
-    large: 150,
-    xlarge: 200,
-  };
+const serviceRates: Record<ServiceType, number> = {
+  standard: 50,
+  express: 80,
+  urgent: 120,
+};
+export const calculateParcelCost = ({ length, width, height, weight, serviceType }: ParcelCostParams): number => {
+  const safeLength = Math.max(1, length);
+  const safeWidth = Math.max(1, width);
+  const safeHeight = Math.max(1, height);
 
-  // Service type surcharges
-  const serviceSurcharges: Record<string, number> = {
-    standard: 0,
-    express: 50,
-    urgent: 100,
-  };
+  const volumetricWeight = (safeLength * safeWidth * safeHeight) / 5000;
+  const chargeableWeight = Math.max(weight, volumetricWeight);
 
-  const baseCost = sizeCosts[size.toLowerCase()] || 70;
-  const weightCost = Number(weight) * 0.5; // 0.5 per unit weight
-  const serviceSurcharge = serviceSurcharges[serviceType.toLowerCase()] || 0;
+  const serviceRate = serviceRates[serviceType];
 
-  return Math.round(baseCost + weightCost + serviceSurcharge);
+  let charge = 0;
+
+  if (chargeableWeight <= 1) {
+    charge = serviceRate;
+  } else if (chargeableWeight <= 5) {
+    charge = serviceRate + 30;
+  } else if (chargeableWeight <= 10) {
+    charge = serviceRate + 60;
+  } else {
+    charge = serviceRate;
+
+    // add extra charge for char above 10kg
+    const extraWeight = chargeableWeight * 6;
+    charge += extraWeight * serviceRate;
+  }
+
+  return Math.ceil(charge);
 };

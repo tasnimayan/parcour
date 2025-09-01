@@ -33,7 +33,7 @@ export function AdminSignupForm({ onSubmit, isPending = false }: AdminSignupForm
           </form>
         </FormProvider>
         <div className="mt-6 text-center">
-          <Link href="/login/admin" className="text-sm">
+          <Link href="/login/admin" className="text-sm underline">
             {"Already have an account? Sign in"}
           </Link>
         </div>

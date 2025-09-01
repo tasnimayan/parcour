@@ -9,10 +9,8 @@ export interface RoleConfig {
 
 export function RoleCard({ config }: { config: RoleConfig }) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow">
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500" />
-
-      <div className="p-6">
+    <div className="group overflow-hidden rounded-xl bg-white shadow-lg">
+      <div className="p-12">
         <h3 className="text-lg font-semibold text-gray-900">{config.title}</h3>
         <p className="mt-2 text-sm text-gray-600">{config.description}</p>
 

@@ -18,7 +18,7 @@ export function ContactInfoSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <CommonFormField
-          id="phone"
+          name="phone"
           label="Phone Number"
           type="tel"
           required
@@ -28,7 +28,7 @@ export function ContactInfoSection() {
         />
 
         <CommonFormField
-          id="altPhone"
+          name="altPhone"
           label="Alternative Phone"
           type="tel"
           placeholder="Alternative phone (optional)"

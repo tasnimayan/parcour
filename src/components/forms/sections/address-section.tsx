@@ -18,7 +18,7 @@ export function AddressSection() {
 
       <div className="space-y-4">
         <CommonFormField
-          id="address.label"
+          name="address.label"
           label="Address Label"
           required
           placeholder="e.g., Home, Office, Warehouse"
@@ -27,7 +27,7 @@ export function AddressSection() {
         />
 
         <CommonFormField
-          id="address.address"
+          name="address.address"
           label="Street Address"
           required
           placeholder="Street address"
@@ -37,7 +37,7 @@ export function AddressSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <CommonFormField
-            id="address.city"
+            name="address.city"
             label="City"
             required
             placeholder="City"
@@ -46,7 +46,7 @@ export function AddressSection() {
           />
 
           <CommonFormField
-            id="address.postalCode"
+            name="address.postalCode"
             label="Postal Code"
             required
             placeholder="Postal code"

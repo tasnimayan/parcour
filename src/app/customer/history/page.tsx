@@ -1,4 +1,4 @@
-import MyBookings from "@/components/customer/book/my-bookings";
+import MyBookings from "@/components/customer/parcel/my-bookings";
 import { Package } from "lucide-react";
 
 export default function History() {

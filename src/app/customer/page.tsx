@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Plus, MapPin, HistoryIcon } from "lucide-react";
 import { CustomerParcelStats } from "@/components/dashboard/customer-parcel-stats";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -26,28 +27,34 @@ export default function Page() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button className="h-auto p-6 flex flex-col items-center gap-2">
-                <Plus className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="font-semibold">Book New Parcel</div>
-                  <div className="text-sm opacity-90">Schedule pickup & delivery</div>
-                </div>
+              <Button className="h-auto p-6 flex flex-col items-center gap-2" asChild>
+                <Link href="/customer/parcels/create">
+                  <Plus className="w-8 h-8" />
+                  <div className="text-center">
+                    <div className="font-semibold">Book New Parcel</div>
+                    <div className="text-sm opacity-90">Schedule pickup & delivery</div>
+                  </div>
+                </Link>
               </Button>
 
-              <Button variant="outline" className="h-auto p-6 flex flex-col items-center gap-2 bg-transparent">
-                <MapPin className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="font-semibold">Track Parcel</div>
-                  <div className="text-sm opacity-70">Real-time location</div>
-                </div>
+              <Button variant="outline" className="h-auto p-6 flex flex-col items-center gap-2 bg-transparent" asChild>
+                <Link href="/tracking">
+                  <MapPin className="w-8 h-8" />
+                  <div className="text-center">
+                    <div className="font-semibold">Track Parcel</div>
+                    <div className="text-sm opacity-70">Real-time location</div>
+                  </div>
+                </Link>
               </Button>
 
-              <Button variant="outline" className="h-auto p-6 flex flex-col items-center gap-2 bg-transparent">
-                <HistoryIcon className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="font-semibold">View History</div>
-                  <div className="text-sm opacity-70">All your parcels</div>
-                </div>
+              <Button variant="outline" className="h-auto p-6 flex flex-col items-center gap-2 bg-transparent" asChild>
+                <Link href="/customer/history">
+                  <HistoryIcon className="w-8 h-8" />
+                  <div className="text-center">
+                    <div className="font-semibold">View History</div>
+                    <div className="text-sm opacity-70">All your parcels</div>
+                  </div>
+                </Link>
               </Button>
             </div>
           </CardContent>

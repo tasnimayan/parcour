@@ -43,7 +43,7 @@ export function CustomerSignupForm({ onSubmit, isPending = false, defaultValues 
         </FormProvider>
 
         <div className="mt-6 text-center">
-          <Link href="/login" className="text-sm">
+          <Link href="/login" className="text-sm underline">
             {"Already have an account? Sign in"}
           </Link>
         </div>

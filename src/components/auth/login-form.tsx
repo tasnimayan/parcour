@@ -97,7 +97,7 @@ export function LoginForm() {
         <DemoLoginDataPopulate handleDemoLogin={handleDemoLogin} />
 
         <div className="mt-6 text-center">
-          <Link href="/register" className="text-sm hover:underline">
+          <Link href="/signup" className="text-sm underline">
             {"Don't have an account? Sign up"}
           </Link>
         </div>

@@ -70,8 +70,12 @@ export const customerSignupRequest = async (data: CustomerSignupFormData): Promi
     },
     body: JSON.stringify(data),
   });
-
-  return await res.json();
+  const resData = await res.json();
+  console.log(resData);
+  if (!resData.success) {
+    throw new Error(resData.message);
+  }
+  return resData;
 };
 export const agentSignupRequest = async (data: AgentSignupFormData): Promise<ApiResponse<AuthUser>> => {
   const res = await fetch(`${API_URL}/auth/signup/agent`, {
@@ -81,6 +85,10 @@ export const agentSignupRequest = async (data: AgentSignupFormData): Promise<Api
     },
     body: JSON.stringify(data),
   });
+  const resData = await res.json();
 
-  return await res.json();
+  if (!resData.success) {
+    throw new Error(resData.message);
+  }
+  return resData;
 };

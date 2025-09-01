@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         } catch (error) {
           console.log("Auth provider error:", error);
-          Cookies.remove("parcour_auth");
+          // Cookies.remove("parcour_auth");
         }
       }
       dispatch({ type: "AUTH_ERROR", payload: "" });

@@ -19,9 +19,9 @@ export function TopNavigation() {
 
   const navigationItems = [
     { path: "/customer", label: "Dashboard", icon: Home },
-    { path: "/customer/book", label: "Book Parcel", icon: Plus },
-    { path: "/customer/track", label: "Track Parcel", icon: MapPin },
-    { path: "/customer/history", label: "Parcel History", icon: History },
+    { path: "/customer/parcels/create", label: "Create Parcel", icon: Plus },
+    { path: "/tracking", label: "Track Parcel", icon: MapPin },
+    { path: "/customer/history", label: "History", icon: History },
   ];
 
   return (

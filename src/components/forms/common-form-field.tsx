@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 interface CommonFormFieldProps {
-  id: string;
+  name: string;
   label: string;
   required?: boolean;
   className?: string;
@@ -16,7 +16,7 @@ interface CommonFormFieldProps {
 }
 
 export const CommonFormField = ({
-  id,
+  name,
   label,
   error,
   type = "text",
@@ -27,10 +27,10 @@ export const CommonFormField = ({
 }: CommonFormFieldProps) => {
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id}>
+      <Label htmlFor={name}>
         {label} {required && "*"}
       </Label>
-      <Input id={id} type={type} placeholder={props.placeholder} step={props.step} {...(register || {})} />
+      <Input id={name} type={type} placeholder={props.placeholder} step={props.step} {...(register || {})} />
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
