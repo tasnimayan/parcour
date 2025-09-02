@@ -25,7 +25,7 @@ export function TopNavigation() {
   ];
 
   return (
-    <header className="border-b bg-card">
+    <header className="border-b bg-card sticky top-0 z-50">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <div className="flex items-center gap-2">

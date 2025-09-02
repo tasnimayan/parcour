@@ -1,4 +1,4 @@
-import ParcelAssignment from "@/components/admin/parcel/parcel-assignment";
+import ParcelManagement from "@/components/admin/parcel/parcel-management";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -12,7 +12,7 @@ export default function Page() {
           Add Parcel
         </Button>
       </PageHeader>
-      <ParcelAssignment />
+      <ParcelManagement />
     </>
   );
 }

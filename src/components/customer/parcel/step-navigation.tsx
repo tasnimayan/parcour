@@ -49,7 +49,7 @@ export const StepNavigation = ({
 export const ProgressIndicator = ({ currentStep }: { currentStep: number }) => {
   const labels = ["Sender", "Receiver", "Package", "Shipping"];
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
+    <div className="px-4 sm:px-6 py-2 bg-white">
       <div className="flex items-center justify-between max-w-2xl flex-wrap mx-auto gap-2">
         {labels.map((label, step) => {
           const isActive = step + 1 <= currentStep;

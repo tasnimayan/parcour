@@ -174,3 +174,37 @@ export const getStatsCounts = async (): Promise<ApiResponse<AdminStatsData>> => 
   });
   return res.json();
 };
+
+export type AssignmentData = {
+  id: number;
+  parcelId: string;
+  agentId: string;
+  assignedBy: string;
+  assignedAt: Date;
+  agent: {
+    userId: string;
+    fullName: string;
+  };
+};
+
+export const setAgentToParcel = async (parcelId: string, agentId: string): Promise<ApiResponse<AssignmentData>> => {
+  if (!parcelId || !agentId) {
+    throw new Error("Parcel ID and Agent ID are required");
+  }
+
+  const res = await fetch(`${API_URL}/admin/assign/agent`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("parcour_auth")}`,
+    },
+    body: JSON.stringify({ parcelId, agentId }),
+  }).then((res) => res.json());
+
+  console.log("res", res);
+
+  if (!res.success) {
+    throw new Error(res.message);
+  }
+  return res;
+};

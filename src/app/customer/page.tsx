@@ -1,8 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, MapPin, HistoryIcon } from "lucide-react";
-import { CustomerParcelStats } from "@/components/dashboard/customer-parcel-stats";
+import { CustomerParcelStats } from "@/components/customer/customer-parcel-stats";
 import Link from "next/link";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
 
 export default function Page() {
   return (
@@ -59,6 +60,8 @@ export default function Page() {
             </div>
           </CardContent>
         </Card>
+
+        <RecentActivity />
       </div>
     </div>
   );

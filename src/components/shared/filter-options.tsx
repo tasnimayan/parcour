@@ -16,6 +16,7 @@ export const SelectStatus = ({ value, onChange }: SelectProps<ParcelStatus>) => 
         <SelectValue placeholder="Select Status" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All Status</SelectItem>
         {STATUS_OPTIONS.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}
@@ -34,6 +35,7 @@ export const SelectPriority = ({ value, onChange }: SelectProps<ParcelPriority>)
         <SelectValue placeholder="Select priority" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All Priority</SelectItem>
         {PRIORITY_OPTIONS.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}
@@ -52,6 +54,7 @@ export const SelectService = ({ value, onChange }: SelectProps<ParcelService>) =
         <SelectValue placeholder="Select Service" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All Services</SelectItem>
         {SERVICE_OPTIONS.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

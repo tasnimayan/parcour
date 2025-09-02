@@ -55,7 +55,7 @@ export default function CreateParcelPage() {
       {/* Progress Indicator */}
       <ProgressIndicator currentStep={currentStep} />
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} id="create-parcel-form" className="space-y-4">
             {isSubmitted && Object.keys(errors).length > 0 && (

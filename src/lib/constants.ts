@@ -1,5 +1,4 @@
 export const STATUS_OPTIONS = [
-  { value: "all", label: "All Status" },
   { value: "pending", label: "Pending" },
   { value: "assigned", label: "Assigned" },
   { value: "picked_up", label: "Picked Up" },
@@ -9,7 +8,6 @@ export const STATUS_OPTIONS = [
 ];
 
 export const PRIORITY_OPTIONS = [
-  { value: "all", label: "All Priority" },
   { value: "low", label: "Low" },
   { value: "medium", label: "Medium" },
   { value: "high", label: "High" },
@@ -17,7 +15,6 @@ export const PRIORITY_OPTIONS = [
 ];
 
 export const SERVICE_OPTIONS = [
-  { value: "all", label: "All Services" },
   { value: "standard", label: "Standard" },
   { value: "express", label: "Express" },
   { value: "urgent", label: "Urgent" },

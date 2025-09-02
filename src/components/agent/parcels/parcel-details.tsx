@@ -79,7 +79,7 @@ const ParcelDetails = () => {
 
         {/* Status Management Sidebar */}
         <div className="space-y-6">
-          {user?.role === "admin" || (user?.role === "agent" && <ParcelUpdateSection parcel={parcel} />)}
+          {(user?.role === "admin" || user?.role === "agent") && <ParcelUpdateSection parcel={parcel} />}
 
           <PaymentInfoCard
             payment={

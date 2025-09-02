@@ -1,6 +1,13 @@
 import { CloudAlert, Truck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const sizeConfig = {
+  sm: "h-8 w-8",
+  md: "h-12 w-12",
+  lg: "h-16 w-16",
+};
 
 export const LoadingState = () => {
   return (
@@ -13,17 +20,19 @@ export const LoadingState = () => {
 };
 
 export const EmptyState = ({
-  icon = <Truck className="h-12 w-12 mx-auto mb-4 opacity-50" />,
+  icon: Icon = Truck,
   title,
   description,
+  size = "md",
 }: {
-  icon?: React.ReactNode;
+  icon?: React.ElementType;
   title: string;
   description?: string;
+  size?: "sm" | "md" | "lg";
 }) => {
   return (
     <div className="text-center py-12 text-muted-foreground">
-      {icon}
+      <Icon className={cn(sizeConfig[size], "mx-auto mb-4 opacity-50")} />
       <p className="text-lg font-medium">{title}</p>
       {description && <p className="text-sm">{description}</p>}
     </div>
@@ -33,15 +42,11 @@ export const EmptyState = ({
 export const ErrorState = ({
   title = "Something went wrong!",
   description,
+  size = "md",
 }: {
   title?: string;
   description?: string;
+  size?: "sm" | "md" | "lg";
 }) => {
-  return (
-    <EmptyState
-      icon={<CloudAlert className="h-12 w-12 mx-auto mb-4 opacity-50" />}
-      title={title}
-      description={description}
-    />
-  );
+  return <EmptyState icon={CloudAlert} title={title} description={description} size={size} />;
 };
