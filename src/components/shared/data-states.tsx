@@ -32,7 +32,7 @@ export const EmptyState = ({
 }) => {
   return (
     <div className="text-center py-12 text-muted-foreground">
-      <Icon className={cn(sizeConfig[size], "mx-auto mb-4 opacity-50")} />
+      <Icon className={cn(sizeConfig[size], "mx-auto mb-2 opacity-50")} />
       <p className="text-lg font-medium">{title}</p>
       {description && <p className="text-sm">{description}</p>}
     </div>

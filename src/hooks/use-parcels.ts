@@ -4,6 +4,15 @@ import { ParcelPriority, ParcelService, ParcelStatus } from "@/types/parcel";
 import { fetchAgentStats, fetchParcelDetails } from "@/lib/agent-api";
 import { fetchCustomerStats, fetchParcelByTrackingCode } from "@/lib/customer-api";
 
+/*
+ * Exports hooks for parcels
+ * useParcels - fetches all parcels
+ * useParcelDetails - fetches a single parcel
+ * useAgentStats - fetches agent stats
+ * useCustomerStats - fetches customer stats
+ * useParcelTracking - fetches parcel tracking details
+ */
+
 type ParcelListProps = {
   searchTerm?: string;
   status?: ParcelStatus | "all";

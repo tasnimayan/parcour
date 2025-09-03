@@ -10,15 +10,27 @@ import { useQuery } from "@tanstack/react-query";
 import { AgentData, MetaData, getAllAgents } from "@/lib/admin-api";
 import { EmptyState, ErrorState, LoadingState } from "@/components/shared/data-states";
 
-const AgentCard = ({
-  agent,
-  isSelected,
-  onSelect,
-}: {
+type AgentCardProps = {
   agent: AgentData;
   isSelected?: boolean;
   onSelect: (agentId: string) => void;
-}) => {
+};
+
+type AgentListProps = {
+  searchTerm: string;
+  currentPage: number;
+  selectedAgent: string;
+  onSelect: (agentId: string) => void;
+};
+
+interface AgentAssignmentDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  parcelId: string;
+  onAssignAgent: (parcelId: string, agentId: string) => void;
+}
+
+const AgentCard = ({ agent, isSelected, onSelect }: AgentCardProps) => {
   return (
     <Button
       onClick={() => onSelect(agent.userId)}
@@ -44,17 +56,7 @@ const AgentCard = ({
   );
 };
 
-const AgentList = ({
-  searchTerm,
-  currentPage,
-  selectedAgent,
-  onSelect,
-}: {
-  searchTerm: string;
-  currentPage: number;
-  selectedAgent: string;
-  onSelect: (agentId: string) => void;
-}) => {
+const AgentList = ({ searchTerm, currentPage, selectedAgent, onSelect }: AgentListProps) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["AGENTS", searchTerm, currentPage],
     queryFn: () =>
@@ -86,14 +88,8 @@ const AgentList = ({
     </>
   );
 };
-interface AgentAssignmentDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  parcelId: string;
-  onAssignAgent: (parcelId: string, agentId: string) => void;
-}
 
-export const AgentAssignmentDialog = ({ isOpen, onClose, parcelId, onAssignAgent }: AgentAssignmentDialogProps) => {
+export const AgentListDialog = ({ isOpen, onClose, parcelId, onAssignAgent }: AgentAssignmentDialogProps) => {
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
   const { currentPage } = usePaginationState(1, 20);
@@ -120,7 +116,7 @@ export const AgentAssignmentDialog = ({ isOpen, onClose, parcelId, onAssignAgent
           <DialogTitle>Assign Agent to Parcel</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto space-y-3">
+        <div className="flex-1 overflow-auto space-y-3 p-2">
           {/* Search */}
           <SearchInput searchTerm={searchTerm} onChange={setSearchTerm} placeholder="Search agents..." />
           <AgentList

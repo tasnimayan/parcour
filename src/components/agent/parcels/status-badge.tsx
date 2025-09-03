@@ -25,5 +25,5 @@ export const StatusBadge = ({ status, className }: StatusBadgeProps) => {
     }
   };
 
-  return <Badge className={cn(getStatusStyles(status), className)}>{status}</Badge>;
+  return <Badge className={cn("rounded-full", getStatusStyles(status), className)}>{status}</Badge>;
 };

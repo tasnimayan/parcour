@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 
 export default function Page() {
   return (
-    <>
+    <div className="space-y-6 flex flex-col h-full">
       <PageHeader title="Users" subtitle="Manage your users and their roles">
         <Button size="sm">
           <Plus className="h-4 w-4 mr-2" />
@@ -13,6 +13,6 @@ export default function Page() {
         </Button>
       </PageHeader>
       <UserManagement />
-    </>
+    </div>
   );
 }

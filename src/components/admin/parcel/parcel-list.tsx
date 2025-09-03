@@ -6,6 +6,7 @@ import { usePaginationState } from "@/hooks/use-pagination";
 import { UserPagination } from "@/components/shared/user-pagination";
 import { useParcels } from "@/hooks/use-parcels";
 import { ErrorState } from "@/components/shared/data-states";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type ParcelListProps = {
   searchTerm: string;
@@ -30,15 +31,17 @@ export const ParcelList = ({ searchTerm, status, priority, service }: ParcelList
   if (isError) return <ErrorState />;
 
   return (
-    <div>
-      <ParcelTable parcels={data?.parcels || []} />
+    <>
+      <ScrollArea className="flex-1 gap-3">
+        <ParcelTable parcels={data?.parcels || []} />
+      </ScrollArea>
       <UserPagination
         currentPage={currentPage}
-        totalItems={data?.meta.total || 0}
+        totalItems={data?.meta?.total || 0}
         itemsPerPage={itemsPerPage}
         onPageChange={onPageChange}
         onItemsPerPageChange={onLimitChange}
       />
-    </div>
+    </>
   );
 };

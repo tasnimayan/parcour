@@ -12,7 +12,7 @@ export default function ParcelManagement() {
   const [priorityFilter, setPriorityFilter] = useState<ParcelPriority | "all">("all");
   const [serviceFilter, setServiceFilter] = useState<ParcelService | "all">("all");
 
-  const [activeTab, setActiveTab] = useState<ParcelStatus>("pending");
+  const [activeTab, setActiveTab] = useState<ParcelStatus | "all">("all");
 
   const tabCounts = {
     all: 0,
@@ -44,8 +44,10 @@ export default function ParcelManagement() {
     failed: "bg-red-500 text-white",
   };
 
+  const status = activeTab === "all" ? statusFilter : activeTab;
+
   return (
-    <div className="min-h-screen bg-background space-y-6">
+    <div className="flex flex-col gap-y-6 flex-1">
       <ParcelFilters
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -58,34 +60,32 @@ export default function ParcelManagement() {
         onReset={resetFilters}
       />
 
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as ParcelStatus)} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 mb-6">
-          {tabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} className="relative">
-              {tab.label}
-              {tab.count > 0 && (
-                <span
-                  className={`${
-                    countColors[tab.value as keyof typeof countColors]
-                  } ml-2 text-xs px-2 py-0.5 rounded-full`}
-                >
-                  {tab.count}
-                </span>
-              )}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as ParcelStatus)}
+        className="w-full flex-1 flex flex-col"
+      >
+        <div className="grid grid-cols-2 py-2">
+          <TabsList className="grid w-full grid-cols-5 order-2 md:order-1">
+            {tabs.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value} className="relative">
+                {tab.label}
+                {tab.count > 0 && (
+                  <span
+                    className={`${
+                      countColors[tab.value as keyof typeof countColors]
+                    } ml-2 text-xs px-2 py-0.5 rounded-full`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
-        <TabsContent value={activeTab} className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">
-                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Parcels
-              </h2>
-            </div>
-          </div>
-
-          <ParcelList searchTerm={searchTerm} status={activeTab} priority={priorityFilter} service={serviceFilter} />
+        <TabsContent value={activeTab} className="space-y-6 flex-1 flex flex-col">
+          <ParcelList searchTerm={searchTerm} status={status} priority={priorityFilter} service={serviceFilter} />
         </TabsContent>
       </Tabs>
     </div>

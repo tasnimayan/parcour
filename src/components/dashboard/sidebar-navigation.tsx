@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 const adminNavItems = [
   { path: "/admin", label: "Overview", icon: Home },
   { path: "/admin/users", label: "User Mangement", icon: Users },
-  { path: "/admin/assignments", label: "Parcel Assignment", icon: Package },
+  { path: "/admin/parcels", label: "Parcel Management", icon: Package },
   { path: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { path: "/admin/reports", label: "Reports", icon: FileText },
 ];

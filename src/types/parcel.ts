@@ -1,4 +1,15 @@
 export type ParcelStatus = "pending" | "picked_up" | "assigned" | "in_transit" | "delivered" | "failed";
+// pending           // Created, waiting for assignment
+// pickup_assigned   // Pickup agent assigned
+// picked_up         // Pickup completed
+// at_hub            // Arrived at hub/warehouse
+// routing           // Being sorted/routed to next hub/agent
+// delivery_assigned // Delivery agent assigned
+// in_transit        // Out for delivery
+// delivered         // Successfully delivered
+// failed            // Delivery failed (could have failure reason)
+// returned          // Returned to sender/customer
+// canceled          // Canceled before fulfillment
 export type ParcelPriority = "low" | "medium" | "high" | "urgent";
 export type ParcelService = "standard" | "express" | "urgent";
 

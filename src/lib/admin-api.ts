@@ -78,18 +78,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // Get all users - admin - Ok
 export const getAllUsers = async ({
   role,
+  status,
   search,
   page,
   limit,
 }: {
   role?: UserRole;
+  status?: UserStatus;
   search?: string;
   page?: number;
   limit?: number;
 }): Promise<ApiResponse<UserData[]>> => {
   const params = new URLSearchParams();
   if (role) params.append("role", role);
+  if (status) params.append("status", status);
   if (search) params.append("search", search);
+
   if (page && page > 0) params.append("page", page.toString());
   if (limit && limit > 0) params.append("limit", limit.toString());
 
@@ -122,8 +126,8 @@ export const fetchAllParcels = async ({
   const params = new URLSearchParams();
 
   if (status) params.append("status", status);
-  if (priority) params.append("priority", priority);
-  if (service) params.append("service", service);
+  if (priority) params.append("priorityType", priority);
+  if (service) params.append("serviceType", service);
   if (search) params.append("search", search);
   if (page && page > 0) params.append("page", page.toString());
   if (limit && limit > 0) params.append("limit", limit.toString());
@@ -201,10 +205,29 @@ export const setAgentToParcel = async (parcelId: string, agentId: string): Promi
     body: JSON.stringify({ parcelId, agentId }),
   }).then((res) => res.json());
 
-  console.log("res", res);
+  if (!res.success) {
+    throw new Error(res.message);
+  }
+  return res;
+};
+
+export const updateUserStatus = async (userId: string, status: UserStatus): Promise<ApiResponse<UserData>> => {
+  if (!userId || !status) {
+    throw new Error("User ID and Status are required");
+  }
+
+  const res = await fetch(`${API_URL}/admin/users/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("parcour_auth")}`,
+    },
+    body: JSON.stringify({ userId, status }),
+  }).then((res) => res.json());
 
   if (!res.success) {
     throw new Error(res.message);
   }
+
   return res;
 };

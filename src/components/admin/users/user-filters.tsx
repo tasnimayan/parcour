@@ -2,7 +2,7 @@ import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { UserRole } from "@/types";
+import { UserRole, UserStatus } from "@/types";
 import { USER_STATUS } from "@/lib/constants";
 
 interface UserFiltersProps {
@@ -10,8 +10,8 @@ interface UserFiltersProps {
   onSearchChange: (value: string) => void;
   selectedRole: UserRole | "all";
   onRoleChange: (value: UserRole | "all") => void;
-  selectedStatus: string;
-  onStatusChange: (value: string) => void;
+  selectedStatus: UserStatus | "all";
+  onStatusChange: (value: UserStatus | "all") => void;
 }
 
 export function UserFilters({
