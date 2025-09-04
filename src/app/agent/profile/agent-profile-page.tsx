@@ -4,7 +4,6 @@ import AgentLocationSharer from "@/components/agent/profile/location-share";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MapPin, Phone, Mail, Star, Package, Shield, User } from "lucide-react";
 import { getSocket } from "@/lib/socket";
@@ -28,7 +27,6 @@ export const AgentProfilePage = ({ token }: { token?: string }) => {
   // Check for existing location sharing preference from cookies
   useEffect(() => {
     const locationCookie = document.cookie.split("; ").find((row) => row.startsWith("location_sharing="));
-    const agentIdCookie = document.cookie.split("; ").find((row) => row.startsWith("agent_id="));
 
     if (locationCookie) {
       const isEnabled = locationCookie.split("=")[1] === "true";
@@ -38,13 +36,10 @@ export const AgentProfilePage = ({ token }: { token?: string }) => {
 
   const handleLocationToggle = (enabled: boolean) => {
     setIsShareLocation(enabled);
-
     // Set cookie for location sharing preference
     document.cookie = `location_sharing=${enabled}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
 
     if (enabled) {
-      // Additional cookie with agent ID for location tracking
-      document.cookie = `agent_id=${agent?.id}; path=/; max-age=${60 * 60 * 24 * 30}`;
     } else {
       socket.disconnect();
     }

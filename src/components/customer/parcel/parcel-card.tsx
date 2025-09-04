@@ -106,7 +106,11 @@ export function PackageCard({
             <Button variant="default" size="sm" asChild>
               <Link href={`/customer/parcels/${id}`}>View Details</Link>
             </Button>
-            {status === "in_transit" && <Button size="sm">Track Live</Button>}
+            {status === "in_transit" && (
+              <Button size="sm" asChild>
+                <Link href={`/tracking?code=${trackingCode}`}>Track Live</Link>
+              </Button>
+            )}
           </div>
         </div>
       </CardContent>

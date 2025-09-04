@@ -18,7 +18,7 @@ const useLocationShare = (token: string) => {
           status: "on_delivery",
         });
       });
-    }, 1000 * 30);
+    }, 1000 * 60);
 
     return () => {
       clearInterval(interval);

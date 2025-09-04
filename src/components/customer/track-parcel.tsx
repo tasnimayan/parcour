@@ -122,6 +122,7 @@ const TrackParcel = () => {
   const [trackingNumber, setTrackingNumber] = useState("");
   const query = useSearchParams();
   const trackingCode = query.get("code");
+
   const handleTrackingNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
