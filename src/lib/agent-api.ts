@@ -1,6 +1,7 @@
 import { ApiResponse } from "@/types";
 import Cookies from "js-cookie";
 import { ParcelData } from "./admin-api";
+import { AgentProfile } from "@/types/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export type AgentStats = {
@@ -24,6 +25,16 @@ export const fetchAgentStats = async (): Promise<ApiResponse<AgentStats>> => {
 
 export const fetchParcelDetails = async (id: string): Promise<ApiResponse<ParcelData>> => {
   const res = await fetch(`${API_URL}/parcel/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Cookies.get("parcour_auth")}`,
+    },
+  });
+  return res.json();
+};
+
+export const fetchProfile = async (): Promise<ApiResponse<AgentProfile>> => {
+  const res = await fetch(`${API_URL}/auth/profile`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${Cookies.get("parcour_auth")}`,

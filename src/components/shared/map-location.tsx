@@ -9,9 +9,10 @@ interface MiniMapProps {
   lat: number;
   lng: number;
   className?: string;
+  status?: string;
 }
 
-const MiniMap: React.FC<MiniMapProps> = ({ lat, lng, className }) => {
+const MiniMap: React.FC<MiniMapProps> = ({ lat, lng, className, status }) => {
   return (
     <div className={cn("overflow-hidden w-full h-full", className)}>
       <MapContainer
@@ -34,9 +35,7 @@ const MiniMap: React.FC<MiniMapProps> = ({ lat, lng, className }) => {
           position={[lat, lng]}
           icon={new Icon({ iconUrl: markerIconPng.src, iconSize: [24, 41], iconAnchor: [12, 41] })}
         >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+          <Popup>{status}</Popup>
         </Marker>
 
         <Circle

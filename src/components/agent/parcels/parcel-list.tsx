@@ -14,13 +14,7 @@ import { EmptyState } from "@/components/shared/data-states";
 
 const Parcels = ({ parcels }: { parcels: ParcelData[] }) => {
   if (!parcels || parcels.length === 0)
-    return (
-      <EmptyState
-        icon={<Package className="h-12 w-12 mx-auto mb-4 opacity-50" />}
-        title="No parcels found"
-        description="Try adjusting your filter"
-      />
-    );
+    return <EmptyState icon={Package} title="No parcels found" description="Try adjusting your filter" />;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -64,7 +58,7 @@ const ParcelsList = () => {
       <Parcels parcels={data?.parcels || []} />
       <UserPagination
         currentPage={currentPage}
-        totalItems={data?.meta.total || 0}
+        totalItems={data?.meta?.total || 0}
         itemsPerPage={itemsPerPage}
         onPageChange={onPageChange}
         onItemsPerPageChange={onLimitChange}

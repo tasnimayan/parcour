@@ -18,6 +18,7 @@ import {
   Route,
   Clock,
   LucideIcon,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { AuthUser } from "@/types";
@@ -38,6 +39,7 @@ const agentNavItems = [
   { path: "/agent/parcels", label: "My Parcels", icon: Package },
   { path: "/agent/routes", label: "Route Optimizer", icon: Route },
   { path: "/agent/history", label: "Delivery History", icon: Clock },
+  { path: "/agent/profile", label: "Profile", icon: User },
 ];
 
 function SidebarHeader({ isCollapsed, toggleCollapse }: { isCollapsed: boolean; toggleCollapse: () => void }) {

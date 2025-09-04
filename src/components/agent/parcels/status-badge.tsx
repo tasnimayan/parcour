@@ -13,7 +13,7 @@ export const StatusBadge = ({ status, className }: StatusBadgeProps) => {
       case "pending":
         return "bg-gray-100 text-gray-800";
       case "picked_up":
-        return "bg-green-100 text-green-800";
+        return "bg-yellow-100 text-yellow-800";
       case "in_transit":
         return "bg-blue-100 text-blue-800";
       case "delivered":

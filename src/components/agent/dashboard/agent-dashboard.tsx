@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, CheckCircle, AlertCircle, TrendingUp, Truck } from "lucide-react";
+import { Package, CheckCircle, AlertCircle, TrendingUp, Truck, Clock } from "lucide-react";
 import { useAgentStats } from "@/hooks/use-parcels";
 import { EmptyState, ErrorState, LoadingState } from "@/components/shared/data-states";
 import { AgentStats } from "@/lib/agent-api";
@@ -55,6 +55,35 @@ export default function AgentDashboard() {
           <StatsCard key={key} label={label} icon={Icon} value={stats[key as keyof AgentStats]} color={color} />
         ))}
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Clock className="h-5 w-5" />
+            <span>Performance Statistics</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-green-600">98.5%</p>
+              <p className="text-sm text-muted-foreground">On-time Delivery</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-blue-600">15 min</p>
+              <p className="text-sm text-muted-foreground">Avg. Delivery Time</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-purple-600">4.8/5</p>
+              <p className="text-sm text-muted-foreground">Customer Rating</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-orange-600">156</p>
+              <p className="text-sm text-muted-foreground">This Month</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Performance Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -7,11 +7,14 @@ import { Search, MapPin, Clock, Truck, Navigation, Phone, User } from "lucide-re
 import { StatusBadge } from "../agent/parcels/status-badge";
 import { useParcelTracking } from "@/hooks/use-parcels";
 import { EmptyState, ErrorState, LoadingState } from "../shared/data-states";
-import dynamic from "next/dynamic";
-const MiniMap = dynamic(() => import("@/components/shared/map-location"), { ssr: false });
+import { format } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import LocationTracking from "../shared/location-tracking";
+import Cookies from "js-cookie";
 
 const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
   const { data, isLoading, isError } = useParcelTracking(trackingCode);
+  const token = Cookies.get("parcour_auth");
 
   if (isLoading) return <LoadingState />;
   if (isError) return <ErrorState />;
@@ -23,7 +26,12 @@ const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
       />
     );
 
-  const { latitude, longitude } = data.assignment.agent.location || { latitude: 0, longitude: 0 };
+  if (data?.status === "delivered")
+    return (
+      <Card>
+        <EmptyState title="Parcel has been delivered" />
+      </Card>
+    );
 
   return (
     <div className="space-y-6">
@@ -48,14 +56,16 @@ const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
               <MapPin className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium">Current Location</p>
-                <p className="text-sm text-muted-foreground">{data.assignment.agent.location?.status}</p>
+                <p className="text-sm text-muted-foreground">on delivery</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <Clock className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium">Est. Delivery</p>
-                <p className="text-sm text-muted-foreground">{data.estimatedDeliveryDate}</p>
+                {data?.estimatedDeliveryDate && (
+                  <p className="text-sm text-muted-foreground">{format(data?.estimatedDeliveryDate, "dd MMM yyyy")}</p>
+                )}
               </div>
             </div>
           </div>
@@ -72,18 +82,7 @@ const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
         </CardHeader>
         <CardContent>
           <div className="relative h-80 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-            {latitude && longitude ? (
-              <MiniMap lat={Number(latitude)} lng={Number(longitude)} />
-            ) : (
-              <div className="text-center space-y-2">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto" />
-                <p className="text-lg font-medium text-muted-foreground">Interactive Map</p>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  Real-time GPS tracking would be displayed here if the parcel is in transit or the agent is on the way
-                  to deliver the parcel.
-                </p>
-              </div>
-            )}
+            <LocationTracking parcelId={data?.id} token={token} />
           </div>
         </CardContent>
       </Card>
@@ -103,8 +102,8 @@ const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="font-medium">{data.assignment.agent.fullName}</p>
-                <p className="text-sm text-muted-foreground">Vehicle: {data.assignment.agent.vehicleType}</p>
+                <p className="font-medium">{data.agent?.fullName}</p>
+                <p className="text-sm text-muted-foreground">Vehicle: {data.agent?.vehicleType}</p>
               </div>
             </div>
             <Button variant="outline" className="flex items-center space-x-2">
@@ -121,7 +120,8 @@ const TrackingData = ({ trackingCode }: { trackingCode: string }) => {
 const TrackParcel = () => {
   const [inputValue, setInputValue] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
-
+  const query = useSearchParams();
+  const trackingCode = query.get("code");
   const handleTrackingNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -175,7 +175,7 @@ const TrackParcel = () => {
       </Card>
 
       {/* Results */}
-      <TrackingData trackingCode={trackingNumber} />
+      <TrackingData trackingCode={trackingCode || trackingNumber} />
     </div>
   );
 };

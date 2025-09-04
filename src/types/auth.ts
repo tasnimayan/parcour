@@ -1,19 +1,35 @@
-export type AdminPayload = {
+export type AgentProfile = {
+  id: string;
   email: string;
-  password: string;
-  fullName: string;
-  department: string;
-};
-export type AgentPayload = {
-  email: string;
-  password: string;
-  fullName: string;
-  phone: string;
-};
-export type CustomerPayload = {
-  email: string;
-  password: string;
-  fullName: string;
-  phone: string;
-  address: string;
+  role: string;
+  status: string;
+  lastLogin: string;
+  profile: {
+    userId: string;
+    fullName: string;
+    phone: string;
+    altPhone: string | null;
+    emailVerified: boolean;
+    governmentId: string | null;
+    dob: string | null;
+    profilePhoto: string | null;
+    vehicleType: string;
+    vehicleNumber: string | null;
+    licenseNo: string | null;
+    employmentType: string;
+    availability: boolean;
+    rating: string;
+    totalDeliveries: number;
+    lastActive: string;
+    createdAt: string;
+    updatedAt: string;
+    location: {
+      agentId: string;
+      latitude: string;
+      longitude: string;
+      updatedAt: string;
+      status: string;
+    };
+    locationStatus: string;
+  };
 };

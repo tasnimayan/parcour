@@ -4,6 +4,7 @@ import { ParcelData } from "./admin-api";
 import { ParcelFormValues } from "./validations/parcel";
 import { calculateParcelCost } from "./utils";
 import { AgentStats } from "./agent-api";
+import { ParcelStatus } from "@/types/parcel";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -30,28 +31,32 @@ export const fetchCreateParcel = async (data: ParcelFormValues): Promise<ApiResp
   return res.json();
 };
 
-interface TrackingDetails extends Omit<ParcelData, "customer" | "assignment" | "payment"> {
-  assignment: {
-    id: 1;
-    parcelId: string;
-    agentId: string;
-    assignedBy: string;
-    assignedAt: string;
-    agent: {
-      fullName: string;
-      phone: string;
-      vehicleType: string;
-      vehicleNumber: string;
-      location: {
-        latitude: number;
-        longitude: number;
-        status: string;
-      } | null;
-    };
+interface TrackingDetails {
+  id: string;
+  trackingCode: string;
+  status: ParcelStatus;
+  pickupAddress: string;
+  recipientName: string;
+  recipientPhone: string;
+  deliveryAddress: string;
+  parcelType: string;
+  parcelSize: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  estimatedDeliveryDate?: string | Date;
+  customer: {
+    fullName: string;
+    phone: string;
   };
+  agent: {
+    fullName: string;
+    phone: string;
+    vehicleType: string;
+    vehicleNumber: string;
+  } | null;
 }
 export const fetchParcelByTrackingCode = async (trackingCode: string): Promise<ApiResponse<TrackingDetails>> => {
-  const res = await fetch(`${API_URL}/parcel/track/${trackingCode}`, {
+  const res = await fetch(`${API_URL}/tracking/code/${trackingCode}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${Cookies.get("parcour_auth")}`,
