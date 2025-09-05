@@ -1,8 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MetaData, fetchAllParcels } from "@/lib/admin-api";
 import { ParcelPriority, ParcelService, ParcelStatus } from "@/types/parcel";
 import { fetchAgentStats, fetchParcelDetails } from "@/lib/agent-api";
 import { fetchCustomerStats, fetchParcelByTrackingCode } from "@/lib/customer-api";
+import { fetchUpdateParcelStatus } from "@/lib/parcel-api";
+import { toast } from "sonner";
 
 /*
  * Exports hooks for parcels
@@ -79,5 +81,20 @@ export const useParcelTracking = (trackingCode: string) => {
     queryFn: () => fetchParcelByTrackingCode(trackingCode),
     select: (data) => data.data,
     enabled: !!trackingCode,
+  });
+};
+
+export const useUpdateParcelStatus = (parcelId: string) => {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (newStatus: ParcelStatus) => fetchUpdateParcelStatus(parcelId, newStatus),
+    onSuccess: () => {
+      toast.success("Parcel status updated successfully");
+      qc.invalidateQueries({ queryKey: ["PARCELS", parcelId] });
+    },
+    onError: () => {
+      toast.error("Failed to update parcel status");
+    },
   });
 };

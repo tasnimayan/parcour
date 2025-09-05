@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import ParcelCard from "./parcel-card";
 import { ParcelFilter } from "./parcel-filter";
 import { ParcelData } from "@/lib/admin-api";
 import { ParcelService, ParcelStatus } from "@/types/parcel";
@@ -11,16 +10,18 @@ import { usePaginationState } from "@/hooks/use-pagination";
 import { UserPagination } from "@/components/shared/user-pagination";
 import { useParcels } from "@/hooks/use-parcels";
 import { EmptyState } from "@/components/shared/data-states";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ParcelTable } from "./parcel-table";
 
 const Parcels = ({ parcels }: { parcels: ParcelData[] }) => {
   if (!parcels || parcels.length === 0)
     return <EmptyState icon={Package} title="No parcels found" description="Try adjusting your filter" />;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-      {parcels.map((parcel) => (
-        <ParcelCard key={parcel.id} parcel={parcel} />
-      ))}
+    <div className="flex-1 gap-6">
+      <ScrollArea className="flex-1 gap-3">
+        <ParcelTable parcels={parcels} />
+      </ScrollArea>
     </div>
   );
 };
@@ -44,7 +45,7 @@ const ParcelsList = () => {
   if (isError) return <div>Error loading parcels</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex-1 flex flex-col">
       {/* Filters and Search */}
       <ParcelFilter
         searchTerm={searchTerm}

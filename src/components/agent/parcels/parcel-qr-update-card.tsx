@@ -11,25 +11,13 @@ import ParcelQRCode from "./parcel-qr-code";
 import { STATUS_OPTIONS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { ParcelStatus } from "@/types/parcel";
-import { fetchUpdateParcelStatus } from "@/lib/parcel-api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useUpdateParcelStatus } from "@/hooks/use-parcels";
 
 export const ParcelUpdateSection = ({ parcel }: { parcel: ParcelData }) => {
   const [deliveryNotes, setDeliveryNotes] = useState("");
   const [status, setStatus] = useState(parcel.status);
-  const qc = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (newStatus: ParcelStatus) => fetchUpdateParcelStatus(parcel.id, newStatus),
-    onSuccess: () => {
-      toast.success("Parcel status updated successfully");
-      qc.invalidateQueries({ queryKey: ["PARCELS", parcel.id] });
-    },
-    onError: () => {
-      toast.error("Failed to update parcel status");
-    },
-  });
+  const mutation = useUpdateParcelStatus(parcel.id);
 
   const handleUpdateStatus = () => {
     mutation.mutate(status);
